@@ -1073,6 +1073,15 @@
                 logoutBtn.style.display = 'none';
                 return;
             }
+            // 检测旧格式userInfo（没有userId）
+            if (!userInfo.userId) {
+                body.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">' +
+                    '<div style="font-size:40px;margin-bottom:10px;">🔄</div>' +
+                    '<div>请退出后重新登录</div>' +
+                    '<div style="font-size:12px;margin-top:5px;">(数据格式已更新)</div></div>';
+                logoutBtn.style.display = 'block';
+                return;
+            }
             body.innerHTML = '<div style="text-align:center;padding:20px;">加载中...</div>';
             fetch('https://user.daidaibird.top/api/general/orders', {
                 method: 'POST',
