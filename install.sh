@@ -74,37 +74,38 @@ cd "$INSTALL_DIR"
 echo ""
 echo "📝 创建启动脚本..."
 
-cat > "$HOME/st" << 'EOF'
+# 创建 daidai 启动脚本到 $PREFIX/bin (Termux) 或 /usr/local/bin (Linux)
+if [ "$IS_TERMUX" = true ]; then
+    BIN_DIR="$PREFIX/bin"
+else
+    BIN_DIR="$HOME/.local/bin"
+    mkdir -p "$BIN_DIR"
+fi
+
+cat > "$BIN_DIR/daidai" << 'EOF'
 #!/bin/bash
 cd "$HOME/st-launcher"
 node launcher.js
 EOF
-chmod +x "$HOME/st"
+chmod +x "$BIN_DIR/daidai"
 
-# 添加到 PATH (仅 Termux)
-if [ "$IS_TERMUX" = true ]; then
-    if ! grep -q 'alias st=' ~/.bashrc 2>/dev/null; then
-        echo 'alias st="$HOME/st"' >> ~/.bashrc
+# 确保 PATH 包含 bin 目录
+if [ "$IS_TERMUX" = false ]; then
+    if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
     fi
 fi
 
 echo ""
-echo "╔═══════════════════════════════════════════════════════╗"
-echo "║                                                       ║"
-echo "║     ✅ 安装完成！                                    ║"
-echo "║                                                       ║"
-echo "║     启动方式：                                        ║"
-echo "║       ~/st        或   cd ~/st-launcher && node launcher.js     ║"
-echo "║                                                       ║"
-echo "║     然后在浏览器中打开:                               ║"
-echo "║       http://127.0.0.1:8080                          ║"
-echo "║                                                       ║"
-echo "╚═══════════════════════════════════════════════════════╝"
+echo "╔═════════════════════════════════════════════════════════╗"
+echo "║                                                         ║"
+echo "║     ✅ 安装完成！                                       ║"
+echo "║                                                         ║"
+echo "║     启动命令:  daidai                                   ║"
+echo "║                                                         ║"
+echo "║     然后在浏览器中打开:                                 ║"
+echo "║       http://127.0.0.1:8080                             ║"
+echo "║                                                         ║"
+echo "╚═════════════════════════════════════════════════════════╝"
 echo ""
-
-# 询问是否立即启动
-read -p "🚀 是否立即启动? (y/N) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    exec node launcher.js
-fi
+echo "🚀 现在输入 daidai 即可启动!"

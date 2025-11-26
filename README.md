@@ -21,11 +21,7 @@ curl -fsSL https://raw.githubusercontent.com/2830897438/st-launcher/main/install
 ### 启动
 
 ```bash
-# 方式1: 使用快捷命令
-~/st
-
-# 方式2: 直接运行
-cd ~/st-launcher && node launcher.js
+daidai
 ```
 
 ### 访问
@@ -52,7 +48,6 @@ cd ~/st-launcher && node launcher.js
 ```
 ~/st-launcher/       # 启动器目录
 ~/st-versions/       # SillyTavern各版本安装目录
-~/st                 # 快捷启动脚本
 ```
 
 ## 手动安装
