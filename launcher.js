@@ -543,10 +543,13 @@ function killPort(port) {
             }
         } catch (e) {}
 
-        // Method 4: Try pkill by script name
+        // Method 4: Try netstat (avoid pkill which kills ourselves)
         try {
-            execSync(`pkill -f "node.*launcher.js" 2>/dev/null`, { stdio: 'ignore' });
-            return true;
+            const result = execSync(`netstat -tlnp 2>/dev/null | grep ":${port} " | awk '{print $7}' | cut -d'/' -f1`, { encoding: 'utf-8' }).trim();
+            if (result && result !== '-' && /^\d+$/.test(result)) {
+                execSync(`kill -9 ${result} 2>/dev/null`, { stdio: 'ignore' });
+                return true;
+            }
         } catch (e) {}
 
         return false;
