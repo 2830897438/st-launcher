@@ -818,7 +818,7 @@
                 return;
             }
             showToast('登录中...', 'info');
-            fetch('https://user.daidaibird.top/api/auth/login', {
+            fetch('https://user.daidaibird.top/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userEmail: email, password: pwd })
@@ -826,7 +826,7 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.code === 200) {
-                    userToken = data.msg;
+                    userToken = data.token;
                     userInfo = { userEmail: email, password: pwd };
                     localStorage.setItem('userToken', userToken);
                     localStorage.setItem('userInfo', JSON.stringify(userInfo));
