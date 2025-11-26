@@ -28,6 +28,9 @@ const AVAILABLE_VERSIONS = {
     '1.12.14': { name: 'v1.12.14 (经典版)', tag: '1.12.14', default: false },
 };
 
+// 本地发现的SillyTavern安装
+let localInstallations = {};
+
 let sillyTavernProcess = null;
 let serverLogs = [];
 const MAX_LOGS = 500;
@@ -41,6 +44,82 @@ let aggregatorUserToken = null;
 let aggregatorUserInfo = null;
 
 /**
+ * Check if a directory is a valid SillyTavern installation
+ */
+function isSillyTavernDir(dir) {
+    try {
+        const packagePath = path.join(dir, 'package.json');
+        const serverPath = path.join(dir, 'server.js');
+        if (fs.existsSync(packagePath) && fs.existsSync(serverPath)) {
+            const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
+            return pkg.name === 'sillytavern' || pkg.name === 'SillyTavern';
+        }
+    } catch (e) {}
+    return false;
+}
+
+/**
+ * Get SillyTavern version from directory
+ */
+function getSTVersion(dir) {
+    try {
+        const packagePath = path.join(dir, 'package.json');
+        if (fs.existsSync(packagePath)) {
+            const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
+            return pkg.version || 'unknown';
+        }
+    } catch (e) {}
+    return 'unknown';
+}
+
+/**
+ * Scan for local SillyTavern installations
+ */
+function scanLocalInstallations() {
+    const foundInstalls = {};
+    const searchPaths = [
+        path.join(HOME_DIR, 'SillyTavern'),
+        path.join(HOME_DIR, 'sillytavern'),
+        path.join(HOME_DIR, 'st'),
+        path.join(HOME_DIR, 'ST'),
+        '/data/data/com.termux/files/home/SillyTavern',
+        '/data/data/com.termux/files/home/sillytavern',
+    ];
+
+    // Also check subdirectories of home
+    try {
+        const homeEntries = fs.readdirSync(HOME_DIR, { withFileTypes: true });
+        for (const entry of homeEntries) {
+            if (entry.isDirectory()) {
+                const subPath = path.join(HOME_DIR, entry.name);
+                if (!searchPaths.includes(subPath)) {
+                    searchPaths.push(subPath);
+                }
+            }
+        }
+    } catch (e) {}
+
+    for (const searchPath of searchPaths) {
+        if (fs.existsSync(searchPath) && isSillyTavernDir(searchPath)) {
+            // Don't include paths that are already in st-versions
+            if (searchPath.startsWith(VERSIONS_DIR)) continue;
+
+            const version = getSTVersion(searchPath);
+            const key = `local_${path.basename(searchPath)}`;
+            foundInstalls[key] = {
+                name: `📁 本地: ${path.basename(searchPath)} (v${version})`,
+                path: searchPath,
+                version: version,
+                isLocal: true,
+            };
+        }
+    }
+
+    localInstallations = foundInstalls;
+    return foundInstalls;
+}
+
+/**
  * Load launcher config
  */
 function loadConfig() {
@@ -51,7 +130,7 @@ function loadConfig() {
     } catch (e) {
         console.error('Failed to load config:', e);
     }
-    return { activeVersion: '1.13.5', speedOptimization: false, apiAggregation: false };
+    return { activeVersion: null, speedOptimization: false, apiAggregation: false };
 }
 
 /**
@@ -69,6 +148,10 @@ function saveConfig(config) {
  * Get version directory path
  */
 function getVersionPath(version) {
+    // Check if it's a local installation
+    if (version && version.startsWith('local_') && localInstallations[version]) {
+        return localInstallations[version].path;
+    }
     return path.join(VERSIONS_DIR, version);
 }
 
@@ -76,6 +159,11 @@ function getVersionPath(version) {
  * Check if version is installed
  */
 function isVersionInstalled(version) {
+    // Local installations are always "installed"
+    if (version && version.startsWith('local_') && localInstallations[version]) {
+        const localPath = localInstallations[version].path;
+        return fs.existsSync(localPath) && fs.existsSync(path.join(localPath, 'node_modules'));
+    }
     const versionPath = getVersionPath(version);
     return fs.existsSync(versionPath) && fs.existsSync(path.join(versionPath, 'node_modules'));
 }
@@ -627,6 +715,20 @@ function getVersionsList() {
     const config = loadConfig();
     const versions = [];
 
+    // First add local installations (they appear at the top)
+    for (const [key, info] of Object.entries(localInstallations)) {
+        versions.push({
+            version: key,
+            name: info.name,
+            installed: true,
+            active: config.activeVersion === key,
+            default: false,
+            isLocal: true,
+            path: info.path,
+        });
+    }
+
+    // Then add downloadable versions
     for (const [version, info] of Object.entries(AVAILABLE_VERSIONS)) {
         versions.push({
             version,
@@ -634,6 +736,7 @@ function getVersionsList() {
             installed: isVersionInstalled(version),
             active: config.activeVersion === version,
             default: info.default,
+            isLocal: false,
         });
     }
 
@@ -664,8 +767,15 @@ function copyDirSync(src, dest) {
  * Switch active version
  */
 function switchVersion(version) {
-    if (!AVAILABLE_VERSIONS[version]) {
+    // Check if it's a local installation or a downloadable version
+    const isLocal = version && version.startsWith('local_');
+
+    if (!isLocal && !AVAILABLE_VERSIONS[version]) {
         return { success: false, message: '未知版本' };
+    }
+
+    if (isLocal && !localInstallations[version]) {
+        return { success: false, message: '本地安装不存在' };
     }
 
     if (!isVersionInstalled(version)) {
@@ -675,8 +785,8 @@ function switchVersion(version) {
     const config = loadConfig();
     const oldVersion = config.activeVersion;
 
-    // 如果切换到不同版本，迁移 data 文件夹
-    if (oldVersion && oldVersion !== version) {
+    // 如果切换到不同版本，迁移 data 文件夹（本地版本不迁移）
+    if (oldVersion && oldVersion !== version && !isLocal) {
         const oldDataPath = path.join(getVersionPath(oldVersion), 'data');
         const newDataPath = path.join(getVersionPath(version), 'data');
 
@@ -748,6 +858,16 @@ async function handleApi(req, res) {
 
         case '/api/versions': {
             res.end(JSON.stringify({ versions: getVersionsList() }));
+            break;
+        }
+
+        case '/api/versions/rescan': {
+            scanLocalInstallations();
+            res.end(JSON.stringify({
+                success: true,
+                message: `发现 ${Object.keys(localInstallations).length} 个本地安装`,
+                versions: getVersionsList()
+            }));
             break;
         }
 
@@ -934,6 +1054,28 @@ async function requestHandler(req, res) {
 // Ensure versions directory exists
 if (!fs.existsSync(VERSIONS_DIR)) {
     fs.mkdirSync(VERSIONS_DIR, { recursive: true });
+}
+
+// Scan for local SillyTavern installations
+console.log('🔍 扫描本地安装...');
+scanLocalInstallations();
+const localCount = Object.keys(localInstallations).length;
+if (localCount > 0) {
+    console.log(`✅ 发现 ${localCount} 个本地安装`);
+    for (const [key, info] of Object.entries(localInstallations)) {
+        console.log(`   📁 ${info.path} (v${info.version})`);
+    }
+
+    // Auto-select local installation if no version configured
+    const config = loadConfig();
+    if (!config.activeVersion) {
+        const firstLocal = Object.keys(localInstallations)[0];
+        config.activeVersion = firstLocal;
+        saveConfig(config);
+        console.log(`✅ 已自动绑定: ${localInstallations[firstLocal].path}`);
+    }
+} else {
+    console.log('📭 未发现本地安装，可在面板中下载');
 }
 
 // Auto cleanup port before starting

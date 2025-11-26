@@ -361,7 +361,10 @@
             <div class="modal-body">
                 <!-- 版本选择 -->
                 <div class="settings-section">
-                    <div class="settings-section-title">📦 版本选择</div>
+                    <div class="settings-section-title" style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>📦 版本选择</span>
+                        <button class="rescan-btn" id="rescanBtn" style="font-size: 0.8rem; padding: 4px 10px; background: #e3f2fd; border: 1px solid #90caf9; border-radius: 12px; cursor: pointer;">🔍 重新扫描</button>
+                    </div>
                     <div class="version-list" id="versionList"></div>
                 </div>
 
@@ -663,10 +666,11 @@
             .then(function(data) {
                 var html = '';
                 data.versions.forEach(function(v) {
-                    var statusText = v.installed ? (v.active ? '当前使用' : '已安装') : '需安装';
+                    var isLocal = v.isLocal || v.version.startsWith('local_');
+                    var statusText = v.installed ? (v.active ? '当前使用' : (isLocal ? '本地' : '已安装')) : '需安装';
                     var statusClass = v.installed ? 'ready' : '';
                     var activeClass = v.active ? 'active' : '';
-                    var canUninstall = v.installed && !v.active;
+                    var canUninstall = v.installed && !v.active && !isLocal;
                     html += '<div class="version-item ' + activeClass + '">' +
                         '<div class="version-main" data-version="' + v.version + '" data-installed="' + v.installed + '">' +
                         '<span class="version-name">' + v.name + '</span>' +
@@ -699,6 +703,20 @@
             })
             .catch(function(err) {
                 list.innerHTML = '<div style="color:red;padding:20px;">加载失败: ' + err.message + '</div>';
+            });
+    }
+
+    // 重新扫描本地安装
+    function rescanLocal() {
+        showToast('正在扫描本地安装...', 'info');
+        fetch(API_BASE + '/api/versions/rescan', { method: 'POST' })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                showToast(data.message, 'success');
+                loadVersions();
+            })
+            .catch(function(err) {
+                showToast('扫描失败: ' + err.message, 'error');
             });
     }
 
@@ -1240,6 +1258,7 @@
         document.getElementById('versionDone').addEventListener('click', function() {
             document.getElementById('versionModal').classList.remove('show');
         });
+        document.getElementById('rescanBtn').addEventListener('click', rescanLocal);
 
         // 速度优化开关
         document.getElementById('speedOptToggle').addEventListener('change', function() {
