@@ -922,8 +922,24 @@ if (!fs.existsSync(VERSIONS_DIR)) {
     fs.mkdirSync(VERSIONS_DIR, { recursive: true });
 }
 
+// Auto cleanup port before starting
+killPort(LAUNCHER_PORT);
+
 // Create and start the launcher server
 const server = http.createServer(requestHandler);
+
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.log(`\n⚠️  端口 ${LAUNCHER_PORT} 被占用，正在清理...`);
+        killPort(LAUNCHER_PORT);
+        setTimeout(() => {
+            server.listen(LAUNCHER_PORT, '0.0.0.0');
+        }, 1000);
+    } else {
+        console.error('启动失败:', err);
+        process.exit(1);
+    }
+});
 
 server.listen(LAUNCHER_PORT, '0.0.0.0', () => {
     console.log(`
