@@ -427,26 +427,40 @@ function getAggregatorStatus() {
 }
 
 /**
- * Kill process using a specific port (cross-platform)
+ * Kill process using a specific port (cross-platform, Termux compatible)
  */
 function killPort(port) {
     try {
-        // Try different methods for Termux/Linux
+        // Method 1: Try fuser (Linux)
         try {
             execSync(`fuser -k ${port}/tcp 2>/dev/null`, { stdio: 'ignore' });
             return true;
-        } catch (e) {
-            // fuser not available, try lsof + kill
-            try {
-                const pid = execSync(`lsof -t -i:${port} 2>/dev/null`, { encoding: 'utf-8' }).trim();
-                if (pid) {
-                    execSync(`kill -9 ${pid} 2>/dev/null`, { stdio: 'ignore' });
-                    return true;
-                }
-            } catch (e2) {
-                // No process found or lsof not available
+        } catch (e) {}
+
+        // Method 2: Try lsof (macOS/some Linux)
+        try {
+            const pid = execSync(`lsof -t -i:${port} 2>/dev/null`, { encoding: 'utf-8' }).trim();
+            if (pid) {
+                execSync(`kill -9 ${pid} 2>/dev/null`, { stdio: 'ignore' });
+                return true;
             }
-        }
+        } catch (e) {}
+
+        // Method 3: Try ss + awk (Termux/Linux)
+        try {
+            const result = execSync(`ss -tlnp 2>/dev/null | grep :${port} | awk '{print $6}' | grep -o 'pid=[0-9]*' | cut -d= -f2`, { encoding: 'utf-8' }).trim();
+            if (result) {
+                execSync(`kill -9 ${result} 2>/dev/null`, { stdio: 'ignore' });
+                return true;
+            }
+        } catch (e) {}
+
+        // Method 4: Try pkill by script name
+        try {
+            execSync(`pkill -f "node.*launcher.js" 2>/dev/null`, { stdio: 'ignore' });
+            return true;
+        } catch (e) {}
+
         return false;
     } catch (e) {
         return false;
@@ -923,25 +937,38 @@ if (!fs.existsSync(VERSIONS_DIR)) {
 }
 
 // Auto cleanup port before starting
+console.log('🔍 检查端口占用...');
 killPort(LAUNCHER_PORT);
 
 // Create and start the launcher server
 const server = http.createServer(requestHandler);
+let retryCount = 0;
+const MAX_RETRIES = 3;
 
 server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-        console.log(`\n⚠️  端口 ${LAUNCHER_PORT} 被占用，正在清理...`);
+        retryCount++;
+        if (retryCount > MAX_RETRIES) {
+            console.error(`\n❌ 端口 ${LAUNCHER_PORT} 无法释放，请手动执行: pkill -f launcher.js`);
+            process.exit(1);
+        }
+        console.log(`\n⚠️  端口 ${LAUNCHER_PORT} 被占用，尝试清理 (${retryCount}/${MAX_RETRIES})...`);
         killPort(LAUNCHER_PORT);
         setTimeout(() => {
             server.listen(LAUNCHER_PORT, '0.0.0.0');
-        }, 1000);
+        }, 1500);
     } else {
         console.error('启动失败:', err);
         process.exit(1);
     }
 });
 
-server.listen(LAUNCHER_PORT, '0.0.0.0', () => {
+// Wait a bit for port cleanup then start
+setTimeout(() => {
+    server.listen(LAUNCHER_PORT, '0.0.0.0');
+}, 500);
+
+server.on('listening', () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
