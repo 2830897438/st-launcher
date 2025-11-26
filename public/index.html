@@ -827,7 +827,7 @@
             .then(function(data) {
                 if (data.code === 200) {
                     userToken = data.token;
-                    userInfo = { userEmail: email, password: pwd };
+                    userInfo = data.msg; // 保存完整用户信息
                     localStorage.setItem('userToken', userToken);
                     localStorage.setItem('userInfo', JSON.stringify(userInfo));
                     showToast('绑定成功！', 'success');
@@ -1074,24 +1074,34 @@
                 return;
             }
             body.innerHTML = '<div style="text-align:center;padding:20px;">加载中...</div>';
-            fetch('https://user.daidaibird.top/api/general/bindInfo', {
+            fetch('https://user.daidaibird.top/api/general/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + userToken },
-                body: JSON.stringify({ userData: JSON.stringify(userInfo) })
+                body: JSON.stringify({ userData: JSON.stringify(userInfo), page: 1 })
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.code === 200 && data.msg) {
-                    var info = data.msg;
+                    var keys = data.msg;
+                    var totalBalance = 0;
+                    keys.forEach(function(k) { totalBalance += parseFloat(k.balance) || 0; });
+                    var keysHtml = '';
+                    keys.forEach(function(k) {
+                        keysHtml += '<div style="background:#f9f9f9;padding:8px;border-radius:8px;margin:5px 0;font-size:12px;">' +
+                            '<div style="font-family:monospace;word-break:break-all;">' + k.api_key.substring(0,20) + '...</div>' +
+                            '<div style="color:var(--c-mint);margin-top:4px;">余额: ¥' + k.balance + '</div>' +
+                            '</div>';
+                    });
                     body.innerHTML = '<div class="user-info-card">' +
                         '<div class="user-avatar-large">😊</div>' +
-                        '<div class="user-name">' + (info.username || userInfo.userEmail.split('@')[0]) + '</div>' +
+                        '<div class="user-name">' + userInfo.userEmail.split('@')[0] + '</div>' +
                         '<div class="user-email">' + userInfo.userEmail + '</div>' +
                         '</div>' +
                         '<div class="balance-card">' +
-                        '<div class="balance-label">余额</div>' +
-                        '<div class="balance-value">¥' + (parseFloat(info.balance) || 0).toFixed(2) + '</div>' +
-                        '</div>';
+                        '<div class="balance-label">总余额</div>' +
+                        '<div class="balance-value">¥' + totalBalance.toFixed(2) + '</div>' +
+                        '</div>' +
+                        '<div style="margin-top:15px;"><div style="font-weight:bold;margin-bottom:8px;">🔑 API密钥 (' + keys.length + ')</div>' + keysHtml + '</div>';
                     logoutBtn.style.display = 'block';
                 } else {
                     body.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">获取信息失败</div>';
