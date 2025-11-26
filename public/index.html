@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>呆呆鸟酒馆启动助手</title>
+    <title>呆呆鸟小窝</title>
     <link rel="icon" type="image/jpeg" href="https://youke1.picui.cn/s1/2025/11/25/6925988c61444.jpg">
     <style>
         :root {
@@ -272,7 +272,7 @@
             <div class="avatar-wrapper">
                 <img src="https://youke1.picui.cn/s1/2025/11/25/6925988c61444.jpg" alt="呆呆鸟">
             </div>
-            <h1>呆呆鸟酒馆</h1>
+            <h1>呆呆鸟小窝</h1>
             <div class="status-badge" id="statusBadge">
                 <span class="status-dot" id="statusDot"></span>
                 <span id="statusText">检测中...</span>
@@ -281,13 +281,13 @@
 
         <div class="main-action">
             <div class="btn-group" id="offlineButtons">
-                <button class="action-btn start-btn" id="startBtn">✨ 启动酒馆</button>
+                <button class="action-btn start-btn" id="startBtn">✨ 启动服务</button>
             </div>
             <div class="btn-group" id="loadingButtons" style="display: none;">
                 <button class="action-btn loading-btn" disabled>🚀 启动中...</button>
             </div>
             <div class="btn-group" id="onlineButtons" style="display: none;">
-                <button class="action-btn enter-btn" id="enterBtn">🍺 进入酒馆</button>
+                <button class="action-btn enter-btn" id="enterBtn">🍺 进入小窝</button>
                 <button class="action-btn stop-btn" id="stopBtn">🛑 停止</button>
             </div>
         </div>
@@ -295,7 +295,7 @@
         <div class="grid-menu">
             <div class="menu-item" id="settingsBtn">
                 <div class="menu-icon">⚙️</div>
-                <div class="menu-text">酒馆设置</div>
+                <div class="menu-text">小窝设置</div>
             </div>
             <div class="menu-item" id="accountBtn">
                 <div class="menu-icon" id="accountIcon">🐦</div>
@@ -355,7 +355,7 @@
     <div class="modal-overlay" id="versionModal">
         <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
-                <h2>⚙️ 酒馆设置</h2>
+                <h2>⚙️ 小窝设置</h2>
                 <button class="modal-close" id="versionClose">&times;</button>
             </div>
             <div class="modal-body">
@@ -572,7 +572,7 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
-                    showToast('酒馆启动成功！🎉', 'success');
+                    showToast('启动成功！🎉', 'success');
                 } else {
                     showToast(data.message || '启动失败', 'error');
                 }
@@ -596,7 +596,7 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
-                    showToast('酒馆已关闭 💤', 'success');
+                    showToast('服务已关闭 💤', 'success');
                 } else {
                     showToast(data.message || '停止失败', 'error');
                 }
@@ -610,12 +610,12 @@
             });
     }
 
-    // 打开酒馆
+    // 打开小窝
     function openTavern() {
         if (isRunning) {
             window.open('http://' + window.location.hostname + ':' + ST_PORT, '_blank');
         } else {
-            showToast('请先启动酒馆', 'info');
+            showToast('请先启动服务', 'info');
         }
     }
 
@@ -705,7 +705,7 @@
     // 卸载版本
     function uninstallVersion(version) {
         if (isRunning) {
-            showToast('请先停止酒馆再卸载', 'error');
+            showToast('请先停止服务再卸载', 'error');
             return;
         }
         if (!confirm('⚠️ 警告：卸载版本 ' + version + '\n\n请确保已备份好该版本的 data 文件夹！\n数据位置: /root/st-versions/' + version + '/data\n\n卸载后所有数据将被删除且无法恢复！\n\n确定要继续吗？')) {
@@ -734,7 +734,7 @@
     // 选择版本
     function selectVersion(version, installed) {
         if (isRunning) {
-            showToast('请先停止酒馆再切换版本', 'error');
+            showToast('请先停止服务再切换版本', 'error');
             return;
         }
 
@@ -1165,7 +1165,7 @@
         // 启动按钮
         document.getElementById('startBtn').addEventListener('click', startServer);
 
-        // 进入酒馆按钮
+        // 进入小窝按钮
         document.getElementById('enterBtn').addEventListener('click', openTavern);
 
         // 停止按钮

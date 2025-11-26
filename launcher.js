@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * 呆呆鸟酒馆启动助手 - SillyTavern Launcher (Termux Version)
- * A cute launcher for SillyTavern server with version management
+ * 呆呆鸟小窝 - Launcher (Termux Version)
  */
 
 import http from 'node:http';
@@ -186,7 +185,7 @@ function uninstallVersion(version) {
 
     // Check if server is running this version
     if (sillyTavernProcess) {
-        return { success: false, message: '请先停止酒馆再卸载' };
+        return { success: false, message: '请先停止服务再卸载' };
     }
 
     try {
@@ -258,7 +257,7 @@ app.use(express.static(path.join(serverDirectory, 'public'), {
         }
 
         addLog(`速度优化已${enable ? '开启' : '关闭'}`, 'info');
-        return { success: true, message: `速度优化已${enable ? '开启' : '关闭'}，重启酒馆后生效` };
+        return { success: true, message: `速度优化已${enable ? '开启' : '关闭'}，重启服务后生效` };
     } catch (error) {
         addLog(`速度优化设置失败: ${error.message}`, 'error');
         return { success: false, message: error.message };
@@ -930,10 +929,10 @@ server.listen(LAUNCHER_PORT, '0.0.0.0', () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
-║          🐦 呆呆鸟酒馆启动助手 已就绪！              ║
+║            🐦 呆呆鸟小窝 已就绪！                    ║
 ║                                                       ║
-║    启动器地址: http://127.0.0.1:${LAUNCHER_PORT}                  ║
-║    酒馆端口:   ${SILLYTAVERN_PORT}                                  ║
+║    面板地址:   http://127.0.0.1:${LAUNCHER_PORT}                  ║
+║    服务端口:   ${SILLYTAVERN_PORT}                                  ║
 ║    API聚合:    http://127.0.0.1:${LAUNCHER_PORT}/v1            ║
 ║                                                       ║
 ║    在浏览器中打开上面的地址即可使用                  ║

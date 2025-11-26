@@ -1,7 +1,7 @@
 {
   "name": "st-launcher",
   "version": "1.0.0",
-  "description": "呆呆鸟酒馆启动助手 - SillyTavern Launcher with version management and API aggregation",
+  "description": "呆呆鸟小窝 - Launcher with version management and API aggregation",
   "main": "launcher.js",
   "type": "module",
   "scripts": {
