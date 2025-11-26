@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>呆呆鸟酒馆启动助手</title>
+    <link rel="icon" type="image/jpeg" href="https://youke1.picui.cn/s1/2025/11/25/6925988c61444.jpg">
+    <style>
+        :root {
+            --primary-brown: #8d6e63;
+            --accent-orange: #ffab91;
+            --bg-cream: #fff8e1;
+            --text-color: #5d4037;
+            --shadow-color: rgba(141, 110, 99, 0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-cream);
+            background-image: radial-gradient(#ffe0b2 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .header { text-align: center; margin-bottom: 20px; }
+        .avatar-wrapper {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 8px 20px var(--shadow-color);
+            overflow: hidden;
+            margin: 0 auto 12px;
+            animation: float 3s ease-in-out infinite;
+        }
+        .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        h1 { font-size: 1.6rem; color: var(--primary-brown); margin-bottom: 5px; }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 2px solid #ffcdd2;
+            cursor: pointer;
+        }
+        .status-badge.online { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #ef5350;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status-dot.active { background-color: #4caf50; animation: pulse 1.5s infinite; }
+        .main-action { width: 100%; margin-bottom: 25px; }
+        .btn-group { display: flex; gap: 10px; width: 100%; }
+        .action-btn {
+            flex: 1;
+            padding: 15px 10px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .action-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .start-btn { background: var(--primary-brown); color: white; box-shadow: 0 5px 0 #5d4037; }
+        .enter-btn { background: #4caf50; color: white; box-shadow: 0 5px 0 #388e3c; }
+        .stop-btn { background: #ef5350; color: white; box-shadow: 0 5px 0 #c62828; }
+        .loading-btn { background: var(--accent-orange); color: white; }
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+        .menu-item {
+            background: white;
+            border: 2px solid #efebe9;
+            border-radius: 18px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .menu-item:hover { border-color: var(--accent-orange); }
+        .menu-icon { font-size: 1.3rem; margin-bottom: 5px; }
+        .menu-text { font-size: 0.9rem; font-weight: bold; }
+        .footer-deco { margin-top: 20px; font-size: 0.75rem; color: #a1887f; text-align: center; }
+        .version-info { font-size: 0.7rem; color: #bcaaa4; margin-top: 3px; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.error { background: #ef5350; }
+        .toast.success { background: #4caf50; }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+        .modal-overlay.show .modal { transform: scale(1); }
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { font-size: 1.1rem; color: var(--primary-brown); }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+        .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+        .modal-footer { padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; }
+        .modal-btn { padding: 10px 20px; border: none; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        .modal-btn.primary { background: var(--primary-brown); color: white; }
+        .modal-btn.secondary { background: #efebe9; color: var(--text-color); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #efebe9;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+        .form-group input:focus { outline: none; border-color: var(--accent-orange); }
+        .log-container {
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry { margin-bottom: 4px; word-break: break-all; }
+        .log-entry .time { color: #78909c; }
+        .log-entry.error { color: #ef5350; }
+        .version-list { display: flex; flex-direction: column; gap: 10px; }
+        .version-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #fafafa;
+            border: 2px solid #efebe9;
+            border-radius: 12px;
+            gap: 8px;
+        }
+        .version-item:hover { border-color: var(--accent-orange); }
+        .version-item.active { border-color: #4caf50; background: #e8f5e9; }
+        .version-main { flex: 1; display: flex; align-items: center; cursor: pointer; }
+        .version-name { flex: 1; font-weight: bold; }
+        .version-status { font-size: 0.8rem; color: #999; }
+        .version-status.ready { color: #4caf50; }
+        .version-uninstall {
+            background: #ffebee;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .version-uninstall:hover { background: #ef5350; }
+        .profile-section { margin-bottom: 20px; }
+        .profile-section-title { font-weight: bold; color: var(--primary-brown); margin-bottom: 10px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+        .api-card { background: #f5f5f5; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #e0e0e0; }
+        .api-key { font-family: monospace; font-size: 0.75rem; background: #fff; padding: 8px; border-radius: 8px; word-break: break-all; color: #333; margin-bottom: 8px; border: 1px solid #ddd; }
+        .api-stats { display: flex; gap: 15px; font-size: 0.85rem; }
+        .api-stat { display: flex; align-items: center; gap: 4px; }
+        .api-stat .label { color: #666; }
+        .api-stat .value { font-weight: bold; }
+        .api-stat .value.green { color: #4caf50; }
+        .api-stat .value.orange { color: #ff9800; }
+        .coupon-card { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 2px dashed #ffab91; }
+        .coupon-name { font-weight: bold; color: #e65100; margin-bottom: 5px; }
+        .coupon-value { font-size: 1.2rem; color: #ff5722; font-weight: bold; }
+        .coupon-status { font-size: 0.8rem; color: #666; margin-top: 5px; }
+        .no-data { text-align: center; color: #999; padding: 15px; font-size: 0.9rem; }
+        .channel-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .channel-tab { padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; border: 2px solid #e0e0e0; background: #fff; transition: all 0.2s; }
+        .channel-tab:hover { border-color: var(--accent-orange); }
+        .channel-tab.active { background: var(--primary-brown); color: white; border-color: var(--primary-brown); }
+        .channel-list { max-height: 400px; overflow-y: auto; }
+        .channel-card { background: #fff; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; border: 2px solid #e8e8e8; transition: all 0.2s; }
+        .channel-card:hover { border-color: #ccc; }
+        .channel-card.offline { opacity: 0.6; background: #fafafa; }
+        .channel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .channel-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .channel-status.online { background: #4caf50; }
+        .channel-status.offline { background: #ff9800; }
+        .channel-title { font-weight: bold; font-size: 0.9rem; color: #333; }
+        .channel-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; background: #e3f2fd; color: #1976d2; }
+        .channel-model { font-size: 0.8rem; color: #666; margin-bottom: 4px; }
+        .channel-desc { font-size: 0.75rem; color: #999; margin-bottom: 6px; line-height: 1.3; }
+        .channel-price { font-size: 0.8rem; color: #e65100; font-weight: bold; }
+        .settings-section { margin-bottom: 20px; }
+        .settings-section:first-child { margin-top: 0; }
+        .settings-section-title { font-weight: bold; color: var(--primary-brown); margin-bottom: 12px; font-size: 0.95rem; padding-bottom: 8px; border-bottom: 2px solid #efebe9; }
+        .settings-item { display: flex; align-items: center; gap: 15px; padding: 12px; background: #fafafa; border-radius: 12px; margin-bottom: 10px; }
+        .settings-item-info { flex: 1; }
+        .settings-item-name { font-weight: bold; font-size: 0.9rem; color: #333; margin-bottom: 4px; }
+        .settings-item-desc { font-size: 0.75rem; color: #666; line-height: 1.4; }
+        .settings-item-endpoint { margin-top: 8px; font-size: 0.75rem; display: flex; align-items: center; gap: 6px; }
+        .settings-item-endpoint code { background: #fff; padding: 4px 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.7rem; }
+        .settings-item-status { margin-top: 6px; font-size: 0.75rem; color: #4caf50; }
+        .copy-btn { background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 2px; }
+        .copy-btn:hover { transform: scale(1.2); }
+        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 26px; transition: 0.3s; }
+        .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background-color: #4caf50; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(22px); }
+        .toggle-switch input:disabled + .toggle-slider { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="avatar-wrapper">
+                <img src="https://youke1.picui.cn/s1/2025/11/25/6925988c61444.jpg" alt="呆呆鸟">
+            </div>
+            <h1>呆呆鸟酒馆</h1>
+            <div class="status-badge" id="statusBadge">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">检测中...</span>
+            </div>
+        </header>
+
+        <div class="main-action">
+            <div class="btn-group" id="offlineButtons">
+                <button class="action-btn start-btn" id="startBtn">✨ 启动酒馆</button>
+            </div>
+            <div class="btn-group" id="loadingButtons" style="display: none;">
+                <button class="action-btn loading-btn" disabled>🚀 启动中...</button>
+            </div>
+            <div class="btn-group" id="onlineButtons" style="display: none;">
+                <button class="action-btn enter-btn" id="enterBtn">🍺 进入酒馆</button>
+                <button class="action-btn stop-btn" id="stopBtn">🛑 停止</button>
+            </div>
+        </div>
+
+        <div class="grid-menu">
+            <div class="menu-item" id="settingsBtn">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-text">酒馆设置</div>
+            </div>
+            <div class="menu-item" id="accountBtn">
+                <div class="menu-icon" id="accountIcon">🐦</div>
+                <div class="menu-text" id="accountText">绑定账号</div>
+            </div>
+            <div class="menu-item" id="daidaiBtn">
+                <div class="menu-icon">🏠</div>
+                <div class="menu-text">进入呆呆鸟</div>
+            </div>
+            <div class="menu-item" id="logsBtn">
+                <div class="menu-icon">📜</div>
+                <div class="menu-text">运行日志</div>
+            </div>
+            <div class="menu-item" id="channelBtn">
+                <div class="menu-icon">📡</div>
+                <div class="menu-text">可用渠道</div>
+            </div>
+            <div class="menu-item" id="profileBtn">
+                <div class="menu-icon">👤</div>
+                <div class="menu-text">个人信息</div>
+            </div>
+        </div>
+
+        <div class="footer-deco">
+            Made with ❤️ by Daidai Bird
+            <div class="version-info" id="versionInfo"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- 登录弹窗 -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🐦 绑定呆呆鸟账号</h2>
+                <button class="modal-close" id="loginClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="loginEmail" placeholder="请输入邮箱">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPassword" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="loginCancel">取消</button>
+                <button class="modal-btn primary" id="loginSubmit">登录绑定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 版本设置弹窗 -->
+    <div class="modal-overlay" id="versionModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>⚙️ 酒馆设置</h2>
+                <button class="modal-close" id="versionClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 版本选择 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">📦 版本选择</div>
+                    <div class="version-list" id="versionList"></div>
+                </div>
+
+                <!-- 速度优化 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">⚡ 速度优化</div>
+                    <div class="settings-item">
+                        <div class="settings-item-info">
+                            <div class="settings-item-name">优化进入速度</div>
+                            <div class="settings-item-desc">关闭浏览器缓存破坏器，为静态资源添加缓存头，加快页面加载速度</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="speedOptToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- API 聚合 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">🔗 呆呆鸟API聚合</div>
+                    <div class="settings-item">
+                        <div class="settings-item-info">
+                            <div class="settings-item-name">启用API聚合服务</div>
+                            <div class="settings-item-desc">自动轮询您的所有API密钥，跳过不可用密钥。API Key填写：daidaibird</div>
+                            <div class="settings-item-endpoint" id="aggregatorEndpoint" style="display:none;">
+                                <strong>聚合端点：</strong><code id="aggregatorUrl"></code>
+                                <button class="copy-btn" id="copyEndpoint" title="复制">📋</button>
+                            </div>
+                            <div class="settings-item-status" id="aggregatorStatus" style="display:none;"></div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="aggregatorToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="versionDone">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 可用渠道弹窗 -->
+    <div class="modal-overlay" id="channelModal">
+        <div class="modal" style="max-width: 500px; max-height: 85vh;">
+            <div class="modal-header">
+                <h2>📡 当前可用渠道</h2>
+                <button class="modal-close" id="channelClose">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 10px;">
+                <div id="channelContent">
+                    <div style="text-align:center;padding:20px;">加载中...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="channelDone">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人信息弹窗 -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>👤 呆呆鸟个人信息</h2>
+                <button class="modal-close" id="profileClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="profileContent">
+                    <div style="text-align:center;padding:20px;">加载中...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="profileDone">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日志弹窗 -->
+    <div class="modal-overlay" id="logModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📜 运行日志</h2>
+                <button class="modal-close" id="logClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="log-container" id="logContainer">
+                    <div class="log-entry">暂无日志</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="logClear">清空</button>
+                <button class="modal-btn primary" id="logDone">关闭</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+(function() {
+    var API_BASE = '';
+    var ST_PORT = 8000;
+    var DAIDAI_API = 'https://user.daidaibird.top';
+
+    var isRunning = false;
+    var isLoading = false;
+    var versionInfo = null;
+    var userToken = '';
+    var userInfo = null;
+
+    // 安全读取 localStorage
+    try {
+        userToken = localStorage.getItem('daidai_token') || '';
+        var savedUser = localStorage.getItem('daidai_user');
+        if (savedUser && savedUser !== 'null' && savedUser !== 'undefined') {
+            userInfo = JSON.parse(savedUser);
+        }
+    } catch (e) {
+        console.error('localStorage error:', e);
+    }
+
+    // Toast 提示
+    function showToast(message, type) {
+        var toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast show ' + (type || 'info');
+        setTimeout(function() { toast.className = 'toast'; }, 3000);
+    }
+
+    // 更新账号UI
+    function updateAccountUI() {
+        var btn = document.getElementById('accountBtn');
+        var icon = document.getElementById('accountIcon');
+        var text = document.getElementById('accountText');
+        if (userInfo && userToken) {
+            btn.style.background = '#e8f5e9';
+            btn.style.borderColor = '#a5d6a7';
+            icon.textContent = '✅';
+            text.textContent = (userInfo.userEmail || '').split('@')[0] || '已绑定';
+        } else {
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            icon.textContent = '🐦';
+            text.textContent = '绑定账号';
+        }
+    }
+
+    // 更新界面状态
+    function updateUI() {
+        var offlineButtons = document.getElementById('offlineButtons');
+        var loadingButtons = document.getElementById('loadingButtons');
+        var onlineButtons = document.getElementById('onlineButtons');
+        var statusDot = document.getElementById('statusDot');
+        var statusText = document.getElementById('statusText');
+        var statusBadge = document.getElementById('statusBadge');
+        var versionInfoEl = document.getElementById('versionInfo');
+
+        if (isLoading) {
+            offlineButtons.style.display = 'none';
+            loadingButtons.style.display = 'flex';
+            onlineButtons.style.display = 'none';
+            return;
+        }
+
+        if (isRunning) {
+            offlineButtons.style.display = 'none';
+            loadingButtons.style.display = 'none';
+            onlineButtons.style.display = 'flex';
+            statusText.textContent = '营业中 (' + ST_PORT + ')';
+            statusDot.classList.add('active');
+            statusBadge.classList.add('online');
+            if (versionInfo && versionInfo.pkgVersion) {
+                versionInfoEl.textContent = 'v' + versionInfo.pkgVersion;
+            }
+        } else {
+            offlineButtons.style.display = 'flex';
+            loadingButtons.style.display = 'none';
+            onlineButtons.style.display = 'none';
+            statusText.textContent = '休息中';
+            statusDot.classList.remove('active');
+            statusBadge.classList.remove('online');
+            versionInfoEl.textContent = '';
+        }
+    }
+
+    // 检查状态
+    function checkStatus() {
+        fetch(API_BASE + '/api/status')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                isRunning = data.running;
+                versionInfo = data.version;
+                updateUI();
+            })
+            .catch(function(err) {
+                console.error('Status check failed:', err);
+            });
+    }
+
+    // 启动服务器
+    function startServer() {
+        if (isLoading) return;
+        isLoading = true;
+        updateUI();
+
+        fetch(API_BASE + '/api/start', { method: 'POST' })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast('酒馆启动成功！🎉', 'success');
+                } else {
+                    showToast(data.message || '启动失败', 'error');
+                }
+            })
+            .catch(function(err) {
+                showToast('启动失败: ' + err.message, 'error');
+            })
+            .finally(function() {
+                isLoading = false;
+                checkStatus();
+            });
+    }
+
+    // 停止服务器
+    function stopServer() {
+        if (isLoading) return;
+        isLoading = true;
+        updateUI();
+
+        fetch(API_BASE + '/api/stop', { method: 'POST' })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast('酒馆已关闭 💤', 'success');
+                } else {
+                    showToast(data.message || '停止失败', 'error');
+                }
+            })
+            .catch(function(err) {
+                showToast('停止失败: ' + err.message, 'error');
+            })
+            .finally(function() {
+                isLoading = false;
+                checkStatus();
+            });
+    }
+
+    // 打开酒馆
+    function openTavern() {
+        if (isRunning) {
+            window.open('http://' + window.location.hostname + ':' + ST_PORT, '_blank');
+        } else {
+            showToast('请先启动酒馆', 'info');
+        }
+    }
+
+    // 登录
+    function doLogin() {
+        var email = document.getElementById('loginEmail').value.trim();
+        var password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+            showToast('请输入邮箱和密码', 'error');
+            return;
+        }
+
+        fetch(DAIDAI_API + '/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userEmail: email, password: password })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.code === 200 && data.sate) {
+                userToken = data.token;
+                userInfo = data.msg;
+                localStorage.setItem('daidai_token', userToken);
+                localStorage.setItem('daidai_user', JSON.stringify(userInfo));
+                updateAccountUI();
+                document.getElementById('loginModal').classList.remove('show');
+                showToast('绑定成功！🎉', 'success');
+            } else {
+                showToast('登录失败：' + (data.msg || '请检查账号密码'), 'error');
+            }
+        })
+        .catch(function(err) {
+            showToast('登录失败：' + err.message, 'error');
+        });
+    }
+
+    // 加载版本列表
+    function loadVersions() {
+        var list = document.getElementById('versionList');
+        list.innerHTML = '<div style="text-align:center;padding:20px;">加载中...</div>';
+
+        fetch(API_BASE + '/api/versions')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var html = '';
+                data.versions.forEach(function(v) {
+                    var statusText = v.installed ? (v.active ? '当前使用' : '已安装') : '需安装';
+                    var statusClass = v.installed ? 'ready' : '';
+                    var activeClass = v.active ? 'active' : '';
+                    var canUninstall = v.installed && !v.active;
+                    html += '<div class="version-item ' + activeClass + '">' +
+                        '<div class="version-main" data-version="' + v.version + '" data-installed="' + v.installed + '">' +
+                        '<span class="version-name">' + v.name + '</span>' +
+                        '<span class="version-status ' + statusClass + '">' + statusText + '</span>' +
+                        '</div>';
+                    if (canUninstall) {
+                        html += '<button class="version-uninstall" data-version="' + v.version + '" title="卸载此版本">🗑️</button>';
+                    }
+                    html += '</div>';
+                });
+                list.innerHTML = html;
+
+                // 绑定版本点击事件
+                list.querySelectorAll('.version-main').forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        var version = this.getAttribute('data-version');
+                        var installed = this.getAttribute('data-installed') === 'true';
+                        selectVersion(version, installed);
+                    });
+                });
+
+                // 绑定卸载按钮事件
+                list.querySelectorAll('.version-uninstall').forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var version = this.getAttribute('data-version');
+                        uninstallVersion(version);
+                    });
+                });
+            })
+            .catch(function(err) {
+                list.innerHTML = '<div style="color:red;padding:20px;">加载失败: ' + err.message + '</div>';
+            });
+    }
+
+    // 卸载版本
+    function uninstallVersion(version) {
+        if (isRunning) {
+            showToast('请先停止酒馆再卸载', 'error');
+            return;
+        }
+        if (!confirm('⚠️ 警告：卸载版本 ' + version + '\n\n请确保已备份好该版本的 data 文件夹！\n数据位置: /root/st-versions/' + version + '/data\n\n卸载后所有数据将被删除且无法恢复！\n\n确定要继续吗？')) {
+            return;
+        }
+        showToast('正在卸载...', 'info');
+        fetch(API_BASE + '/api/versions/uninstall', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ version: version })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showToast('卸载成功！', 'success');
+                loadVersions();
+            } else {
+                showToast('卸载失败: ' + data.message, 'error');
+            }
+        })
+        .catch(function(err) {
+            showToast('卸载失败: ' + err.message, 'error');
+        });
+    }
+
+    // 选择版本
+    function selectVersion(version, installed) {
+        if (isRunning) {
+            showToast('请先停止酒馆再切换版本', 'error');
+            return;
+        }
+
+        if (!installed) {
+            if (!confirm('版本 ' + version + ' 未安装，是否立即安装？\n（安装可能需要几分钟）')) {
+                return;
+            }
+            showToast('正在安装，请稍候...', 'info');
+            fetch(API_BASE + '/api/versions/install', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ version: version })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast('安装成功！', 'success');
+                    switchToVersion(version);
+                } else {
+                    showToast('安装失败: ' + data.message, 'error');
+                }
+            })
+            .catch(function(err) {
+                showToast('安装失败: ' + err.message, 'error');
+            });
+        } else {
+            switchToVersion(version);
+        }
+    }
+
+    function switchToVersion(version) {
+        fetch(API_BASE + '/api/versions/switch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ version: version })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showToast('已切换到 ' + version, 'success');
+                loadVersions();
+            } else {
+                showToast('切换失败: ' + data.message, 'error');
+            }
+        })
+        .catch(function(err) {
+            showToast('切换失败: ' + err.message, 'error');
+        });
+    }
+
+    // 渠道数据缓存
+    var channelData = [];
+    var currentChannelType = '全部';
+
+    // 加载渠道列表
+    function loadChannels() {
+        var content = document.getElementById('channelContent');
+        content.innerHTML = '<div style="text-align:center;padding:20px;">加载中...</div>';
+
+        var userData = {};
+        if (userInfo) {
+            userData = {
+                userId: userInfo.userId || userInfo.uid,
+                userEmail: userInfo.userEmail,
+                password: userInfo.password,
+                invitationCode: userInfo.invitationCode
+            };
+        }
+
+        fetch(DAIDAI_API + '/api/commodity/getPricing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': userToken ? 'Bearer ' + userToken : ''
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.code === 200 && data.msg) {
+                channelData = data.msg;
+                renderChannels();
+            } else {
+                content.innerHTML = '<div class="no-data">暂无渠道数据</div>';
+            }
+        })
+        .catch(function(err) {
+            content.innerHTML = '<div style="color:red;padding:20px;">加载失败: ' + err.message + '</div>';
+        });
+    }
+
+    // 渲染渠道列表
+    function renderChannels() {
+        var content = document.getElementById('channelContent');
+
+        // 获取所有类型
+        var types = ['全部'];
+        channelData.forEach(function(item) {
+            if (types.indexOf(item.type) === -1) {
+                types.push(item.type);
+            }
+        });
+
+        // 过滤数据
+        var filtered = currentChannelType === '全部' ? channelData : channelData.filter(function(item) {
+            return item.type === currentChannelType;
+        });
+
+        var html = '';
+
+        // 渲染标签
+        html += '<div class="channel-tabs">';
+        types.forEach(function(type) {
+            html += '<div class="channel-tab' + (type === currentChannelType ? ' active' : '') + '" data-type="' + type + '">' + type + '</div>';
+        });
+        html += '</div>';
+
+        // 渲染列表
+        html += '<div class="channel-list">';
+        if (filtered.length === 0) {
+            html += '<div class="no-data">该分类暂无渠道</div>';
+        } else {
+            filtered.forEach(function(item) {
+                var isOnline = item.mac === '1';
+                html += '<div class="channel-card' + (isOnline ? '' : ' offline') + '">';
+                html += '<div class="channel-header">';
+                html += '<span class="channel-status ' + (isOnline ? 'online' : 'offline') + '"></span>';
+                html += '<span class="channel-title">' + (item.title ? '[' + item.title + '] ' : '') + item.module + '</span>';
+                html += '<span class="channel-tag">' + item.type + '</span>';
+                html += '</div>';
+                if (item.text) {
+                    html += '<div class="channel-desc">' + item.text + '</div>';
+                }
+                html += '<div class="channel-price">';
+                if (item.is_price === '1') {
+                    html += '¥' + (parseFloat(item.price) * parseFloat(item.num)).toFixed(2) + '/条 (倍率: ' + item.num + ')';
+                } else {
+                    html += '按量计费';
+                }
+                if (!isOnline) {
+                    html += ' <span style="color:#ff9800;">· 检修中</span>';
+                }
+                html += '</div>';
+                html += '</div>';
+            });
+        }
+        html += '</div>';
+
+        content.innerHTML = html;
+
+        // 绑定标签点击事件
+        content.querySelectorAll('.channel-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                currentChannelType = this.getAttribute('data-type');
+                renderChannels();
+            });
+        });
+    }
+
+    // 加载个人信息
+    function loadProfile() {
+        var content = document.getElementById('profileContent');
+        content.innerHTML = '<div style="text-align:center;padding:20px;">加载中...</div>';
+
+        var userData = {
+            userId: userInfo.userId || userInfo.uid,
+            userEmail: userInfo.userEmail,
+            password: userInfo.password,
+            invitationCode: userInfo.invitationCode
+        };
+
+        // 并行获取 API 密钥和优惠券
+        Promise.all([
+            fetch(DAIDAI_API + '/api/general/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + userToken
+                },
+                body: JSON.stringify({ userData: JSON.stringify(userData), page: 1 })
+            }).then(function(r) { return r.json(); }).catch(function() { return { code: 0 }; }),
+            fetch(DAIDAI_API + '/api/general/gifts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + userToken
+                },
+                body: JSON.stringify(userData)
+            }).then(function(r) { return r.json(); }).catch(function() { return { code: 0 }; })
+        ]).then(function(results) {
+            var ordersData = results[0];
+            var giftsData = results[1];
+            var html = '';
+
+            // 计算总余额
+            var totalBalance = 0;
+            var totalUsed = 0;
+            if (ordersData.code === 200 && ordersData.msg && ordersData.msg.length > 0) {
+                ordersData.msg.forEach(function(item) {
+                    totalBalance += parseFloat(item.balance) || 0;
+                    totalUsed += parseFloat(item.utilised) || 0;
+                });
+            }
+
+            // 总余额显示
+            html += '<div class="profile-section" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 15px; padding: 15px; text-align: center;">';
+            html += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">💰 总剩余额度</div>';
+            html += '<div style="font-size: 2rem; font-weight: bold; color: #2e7d32;">$' + totalBalance.toFixed(2) + '</div>';
+            html += '<div style="font-size: 0.8rem; color: #999; margin-top: 5px;">已使用: $' + totalUsed.toFixed(2) + '</div>';
+            html += '</div>';
+
+            // API 密钥部分
+            html += '<div class="profile-section">';
+            html += '<div class="profile-section-title">🔑 我的 API 密钥</div>';
+            if (ordersData.code === 200 && ordersData.msg && ordersData.msg.length > 0) {
+                ordersData.msg.forEach(function(item) {
+                    html += '<div class="api-card">';
+                    html += '<div class="api-key">' + item.api_key + '</div>';
+                    html += '<div class="api-stats">';
+                    html += '<div class="api-stat"><span class="label">已用:</span><span class="value orange">$' + item.utilised + '</span></div>';
+                    html += '<div class="api-stat"><span class="label">剩余:</span><span class="value green">$' + item.balance + '</span></div>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+            } else {
+                html += '<div class="no-data">暂无 API 密钥</div>';
+            }
+            html += '</div>';
+
+            // 优惠券部分
+            html += '<div class="profile-section">';
+            html += '<div class="profile-section-title">🎫 我的优惠券</div>';
+            if (giftsData.code === 200 && giftsData.msg && giftsData.msg.length > 0) {
+                giftsData.msg.forEach(function(item) {
+                    html += '<div class="coupon-card">';
+                    html += '<div class="coupon-name">' + (item.description || '优惠券') + '</div>';
+                    html += '<div class="coupon-value">¥' + item.preferential + '</div>';
+                    html += '<div class="coupon-status">' + item.voucher_state + ' · ' + item.type + '</div>';
+                    html += '</div>';
+                });
+            } else {
+                html += '<div class="no-data">暂无优惠券</div>';
+            }
+            html += '</div>';
+
+            content.innerHTML = html;
+        }).catch(function(err) {
+            content.innerHTML = '<div style="color:red;padding:20px;">加载失败: ' + err.message + '</div>';
+        });
+    }
+
+    // 加载日志
+    function loadLogs() {
+        var container = document.getElementById('logContainer');
+        fetch(API_BASE + '/api/logs')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.logs && data.logs.length > 0) {
+                    var html = '';
+                    data.logs.forEach(function(log) {
+                        html += '<div class="log-entry ' + log.type + '">' +
+                            '<span class="time">[' + log.timestamp + ']</span> ' +
+                            log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+                            '</div>';
+                    });
+                    container.innerHTML = html;
+                    container.scrollTop = container.scrollHeight;
+                } else {
+                    container.innerHTML = '<div class="log-entry">暂无日志</div>';
+                }
+            })
+            .catch(function(err) {
+                container.innerHTML = '<div class="log-entry error">获取日志失败: ' + err.message + '</div>';
+            });
+    }
+
+    // 加载设置
+    function loadSettings() {
+        fetch(API_BASE + '/api/settings')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                // 速度优化开关
+                var speedToggle = document.getElementById('speedOptToggle');
+                speedToggle.checked = data.speedOptimization || false;
+
+                // API聚合开关 - 基于实际运行状态，而非保存的配置
+                var aggregatorToggle = document.getElementById('aggregatorToggle');
+                var aggregatorEndpoint = document.getElementById('aggregatorEndpoint');
+                var aggregatorStatus = document.getElementById('aggregatorStatus');
+                var isRunning = data.aggregator && data.aggregator.running;
+
+                aggregatorToggle.checked = isRunning;
+
+                if (isRunning) {
+                    aggregatorEndpoint.style.display = 'flex';
+                    aggregatorStatus.style.display = 'block';
+                    aggregatorStatus.textContent = '运行中 · ' + data.aggregator.keysCount + ' 个密钥可用';
+                    var fullEndpoint = window.location.origin + data.aggregator.endpoint;
+                    document.getElementById('aggregatorUrl').textContent = fullEndpoint;
+                } else {
+                    aggregatorEndpoint.style.display = 'none';
+                    aggregatorStatus.style.display = 'none';
+                }
+            })
+            .catch(function(err) {
+                console.error('加载设置失败:', err);
+            });
+    }
+
+    // 切换速度优化
+    function toggleSpeedOptimization(enable) {
+        fetch(API_BASE + '/api/settings/speed-optimization', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enable: enable })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showToast(data.message, 'success');
+            } else {
+                showToast(data.message, 'error');
+                document.getElementById('speedOptToggle').checked = !enable;
+            }
+        })
+        .catch(function(err) {
+            showToast('设置失败: ' + err.message, 'error');
+            document.getElementById('speedOptToggle').checked = !enable;
+        });
+    }
+
+    // 切换API聚合
+    function toggleAggregator(enable) {
+        if (enable) {
+            if (!userInfo || !userToken) {
+                showToast('请先绑定呆呆鸟账号', 'error');
+                document.getElementById('aggregatorToggle').checked = false;
+                return;
+            }
+            fetch(API_BASE + '/api/aggregator/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: userToken, userInfo: userInfo })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast(data.message + ' · ' + data.keysCount + ' 个密钥', 'success');
+                    document.getElementById('aggregatorEndpoint').style.display = 'flex';
+                    document.getElementById('aggregatorStatus').style.display = 'block';
+                    document.getElementById('aggregatorStatus').textContent = '运行中 · ' + data.keysCount + ' 个密钥可用';
+                    var fullEndpoint = window.location.origin + data.endpoint;
+                    document.getElementById('aggregatorUrl').textContent = fullEndpoint;
+                } else {
+                    showToast(data.message, 'error');
+                    document.getElementById('aggregatorToggle').checked = false;
+                }
+            })
+            .catch(function(err) {
+                showToast('启动失败: ' + err.message, 'error');
+                document.getElementById('aggregatorToggle').checked = false;
+            });
+        } else {
+            fetch(API_BASE + '/api/aggregator/stop', { method: 'POST' })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    document.getElementById('aggregatorEndpoint').style.display = 'none';
+                    document.getElementById('aggregatorStatus').style.display = 'none';
+                } else {
+                    showToast(data.message, 'error');
+                    document.getElementById('aggregatorToggle').checked = true;
+                }
+            })
+            .catch(function(err) {
+                showToast('停止失败: ' + err.message, 'error');
+                document.getElementById('aggregatorToggle').checked = true;
+            });
+        }
+    }
+
+    // 复制聚合端点
+    function copyAggregatorEndpoint() {
+        var url = document.getElementById('aggregatorUrl').textContent;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(function() {
+                showToast('已复制到剪贴板', 'success');
+            }).catch(function() {
+                showToast('复制失败', 'error');
+            });
+        } else {
+            var textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('已复制到剪贴板', 'success');
+            } catch (err) {
+                showToast('复制失败', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+    }
+
+    // 页面加载完成后绑定事件
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded, bindingEvents...');
+
+        // 账号按钮
+        document.getElementById('accountBtn').addEventListener('click', function() {
+            console.log('Account button clicked');
+            if (userInfo && userToken) {
+                if (confirm('已绑定账号，是否退出登录？')) {
+                    localStorage.removeItem('daidai_token');
+                    localStorage.removeItem('daidai_user');
+                    userToken = '';
+                    userInfo = null;
+                    updateAccountUI();
+                    showToast('已退出登录', 'success');
+                }
+            } else {
+                document.getElementById('loginModal').classList.add('show');
+            }
+        });
+
+        // 启动按钮
+        document.getElementById('startBtn').addEventListener('click', startServer);
+
+        // 进入酒馆按钮
+        document.getElementById('enterBtn').addEventListener('click', openTavern);
+
+        // 停止按钮
+        document.getElementById('stopBtn').addEventListener('click', stopServer);
+
+        // 状态栏点击
+        document.getElementById('statusBadge').addEventListener('click', openTavern);
+
+        // 设置按钮
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            document.getElementById('versionModal').classList.add('show');
+            loadVersions();
+            loadSettings();
+        });
+
+        // 进入呆呆鸟
+        document.getElementById('daidaiBtn').addEventListener('click', function() {
+            window.open('https://www.daidaibird.top/', '_blank');
+        });
+
+        // 日志按钮
+        document.getElementById('logsBtn').addEventListener('click', function() {
+            document.getElementById('logModal').classList.add('show');
+            loadLogs();
+        });
+
+        // 可用渠道按钮
+        document.getElementById('channelBtn').addEventListener('click', function() {
+            document.getElementById('channelModal').classList.add('show');
+            loadChannels();
+        });
+
+        // 渠道弹窗关闭
+        document.getElementById('channelClose').addEventListener('click', function() {
+            document.getElementById('channelModal').classList.remove('show');
+        });
+        document.getElementById('channelDone').addEventListener('click', function() {
+            document.getElementById('channelModal').classList.remove('show');
+        });
+
+        // 个人信息按钮
+        document.getElementById('profileBtn').addEventListener('click', function() {
+            if (!userInfo || !userToken) {
+                showToast('请先绑定呆呆鸟账号', 'error');
+                return;
+            }
+            document.getElementById('profileModal').classList.add('show');
+            loadProfile();
+        });
+
+        // 个人信息弹窗
+        document.getElementById('profileClose').addEventListener('click', function() {
+            document.getElementById('profileModal').classList.remove('show');
+        });
+        document.getElementById('profileDone').addEventListener('click', function() {
+            document.getElementById('profileModal').classList.remove('show');
+        });
+
+        // 登录弹窗
+        document.getElementById('loginClose').addEventListener('click', function() {
+            document.getElementById('loginModal').classList.remove('show');
+        });
+        document.getElementById('loginCancel').addEventListener('click', function() {
+            document.getElementById('loginModal').classList.remove('show');
+        });
+        document.getElementById('loginSubmit').addEventListener('click', doLogin);
+
+        // 版本弹窗
+        document.getElementById('versionClose').addEventListener('click', function() {
+            document.getElementById('versionModal').classList.remove('show');
+        });
+        document.getElementById('versionDone').addEventListener('click', function() {
+            document.getElementById('versionModal').classList.remove('show');
+        });
+
+        // 速度优化开关
+        document.getElementById('speedOptToggle').addEventListener('change', function() {
+            toggleSpeedOptimization(this.checked);
+        });
+
+        // API聚合开关
+        document.getElementById('aggregatorToggle').addEventListener('change', function() {
+            toggleAggregator(this.checked);
+        });
+
+        // 复制聚合端点
+        document.getElementById('copyEndpoint').addEventListener('click', copyAggregatorEndpoint);
+
+        // 日志弹窗
+        document.getElementById('logClose').addEventListener('click', function() {
+            document.getElementById('logModal').classList.remove('show');
+        });
+        document.getElementById('logDone').addEventListener('click', function() {
+            document.getElementById('logModal').classList.remove('show');
+        });
+        document.getElementById('logClear').addEventListener('click', function() {
+            fetch(API_BASE + '/api/clear-logs', { method: 'POST' })
+                .then(function() {
+                    document.getElementById('logContainer').innerHTML = '<div class="log-entry">日志已清空</div>';
+                    showToast('日志已清空', 'success');
+                });
+        });
+
+        // 点击弹窗背景关闭
+        document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                }
+            });
+        });
+
+        // 初始化
+        updateAccountUI();
+        checkStatus();
+        setInterval(checkStatus, 5000);
+
+        console.log('All events bindingComplete');
+    });
+})();
+</script>
+</body>
+</html>

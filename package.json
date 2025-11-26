@@ -1,0 +1,22 @@
+{
+  "name": "st-launcher",
+  "version": "1.0.0",
+  "description": "呆呆鸟酒馆启动助手 - SillyTavern Launcher with version management and API aggregation",
+  "main": "launcher.js",
+  "type": "module",
+  "scripts": {
+    "start": "node launcher.js"
+  },
+  "keywords": [
+    "sillytavern",
+    "launcher",
+    "termux",
+    "ai",
+    "llm"
+  ],
+  "author": "Daidai Bird",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
