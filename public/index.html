@@ -1038,30 +1038,46 @@
         function loadChannels() {
             var list = document.getElementById('channelList');
             list.innerHTML = '<div style="text-align:center;padding:30px;"><div style="font-size:30px;">🐱</div>加载中...</div>';
-            fetch('https://api.daidaibird.top/v1/models')
+            if (!userInfo || !userToken || !userInfo.userId) {
+                list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">请先登录查看渠道</div>';
+                return;
+            }
+            fetch('https://user.daidaibird.top/api/commodity/getPricing', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + userToken },
+                body: JSON.stringify(userInfo)
+            })
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
-                    if (!data.data || data.data.length === 0) {
+                    if (data.code !== 200 || !data.msg || data.msg.length === 0) {
                         list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">暂无渠道</div>';
                         return;
                     }
                     var groups = {};
-                    data.data.forEach(function(m) {
-                        var prefix = m.id.match(/^\[([^\]]+)\]/);
-                        var group = prefix ? prefix[1] : '其他';
+                    data.msg.forEach(function(m) {
+                        var group = m.type || '其他';
                         if (!groups[group]) groups[group] = [];
-                        groups[group].push(m.id);
+                        groups[group].push(m);
                     });
                     var html = '';
                     for (var g in groups) {
-                        html += '<div class="channel-group"><div class="channel-group-title">' + g + ' (' + groups[g].length + ')</div>';
-                        groups[g].forEach(function(id) {
-                            var name = id.replace(/^\[[^\]]+\]/, '');
-                            html += '<div class="channel-item">' + name + '</div>';
+                        var items = groups[g];
+                        html += '<div class="channel-group"><div class="channel-group-title">' + g + ' (' + items.length + ')</div>';
+                        items.forEach(function(m) {
+                            var status = m.mac === '1' ? '✅' : '🔧';
+                            var title = m.title ? '[' + m.title + '] ' : '';
+                            var price = m.num ? '¥' + (parseFloat(m.price) * parseFloat(m.num)).toFixed(2) + '/条' : '';
+                            html += '<div class="channel-item" style="display:flex;justify-content:space-between;align-items:center;">' +
+                                '<div><span>' + status + '</span> ' + title + m.module + '</div>' +
+                                '<div style="font-size:10px;color:var(--c-mint);">' + price + '</div>' +
+                                '</div>';
                         });
                         html += '</div>';
                     }
                     list.innerHTML = html;
+                })
+                .catch(function() {
+                    list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">加载失败</div>';
                 });
         }
 
