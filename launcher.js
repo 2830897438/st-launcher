@@ -936,6 +936,10 @@ async function handleApi(req, res) {
                 try {
                     const { enable } = JSON.parse(body);
                     const config = loadConfig();
+                    if (!config.activeVersion) {
+                        res.end(JSON.stringify({ success: false, message: '请先选择版本' }));
+                        return;
+                    }
                     const result = applySpeedOptimization(config.activeVersion, enable);
                     if (result.success) {
                         config.speedOptimization = enable;
