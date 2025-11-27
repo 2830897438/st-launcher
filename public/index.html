@@ -29,29 +29,37 @@
             background-color: var(--bg-cream);
             background-image: radial-gradient(var(--accent-orange) 8%, transparent 8%);
             background-size: 30px 30px;
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Nunito', 'ZCOOL KuaiLe', sans-serif;
             color: var(--text-dark);
-            padding: 15px;
-            overflow-x: hidden;
+            padding: 10px;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         .app-container {
             width: 100%;
-            max-width: 360px;
+            max-width: 340px;
             background: #fffdf5;
             border: 3px solid var(--primary-brown);
-            border-radius: 30px;
-            box-shadow: 8px 8px 0 var(--primary-brown);
-            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 5px 5px 0 var(--primary-brown);
+            padding: 12px 12px;
             position: relative;
             z-index: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
+            max-height: calc(100vh - 20px);
+            overflow: hidden;
         }
 
         .header {
@@ -59,23 +67,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
 
         .avatar-wrapper {
-            width: 110px;
-            height: 110px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, var(--accent-orange), var(--primary-brown));
-            border: 4px solid var(--primary-brown);
+            border: 2px solid var(--primary-brown);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             position: relative;
             overflow: hidden;
             animation: float 3s ease-in-out infinite;
-            box-shadow: 0 8px 20px var(--shadow-color);
+            box-shadow: 0 4px 10px var(--shadow-color);
         }
 
         .avatar-wrapper img {
@@ -92,29 +100,29 @@
 
         h1 {
             font-family: 'ZCOOL KuaiLe', cursive;
-            font-size: 26px;
+            font-size: 18px;
             color: var(--primary-brown);
-            margin: 8px 0;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 0 var(--accent-orange);
+            margin: 2px 0;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 var(--accent-orange);
         }
 
         .subtitle {
-            font-size: 13px;
+            font-size: 10px;
             color: var(--text-light);
-            margin-bottom: 12px;
+            margin-bottom: 5px;
         }
 
         .status-badge {
             background: #fffdf5;
             border: 2px solid var(--primary-brown);
-            padding: 8px 18px;
-            border-radius: 25px;
-            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 3px 3px 0 var(--shadow-color);
+            gap: 5px;
+            box-shadow: 2px 2px 0 var(--shadow-color);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -163,37 +171,37 @@
 
         .main-action {
             width: 100%;
-            margin: 20px 0 25px;
+            margin: 8px 0 10px;
         }
 
         .btn-group {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             width: 100%;
         }
 
         .btn-3d {
             flex: 1;
             background: var(--accent-orange);
-            border: 3px solid var(--primary-brown);
-            border-radius: 15px;
-            padding: 16px 12px;
+            border: 2px solid var(--primary-brown);
+            border-radius: 10px;
+            padding: 10px 6px;
             font-family: 'ZCOOL KuaiLe', cursive;
-            font-size: 16px;
+            font-size: 13px;
             cursor: pointer;
             position: relative;
-            box-shadow: 0 6px 0 var(--primary-brown);
+            box-shadow: 0 3px 0 var(--primary-brown);
             transition: all 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 4px;
             color: var(--text-dark);
             font-weight: bold;
         }
 
         .btn-3d:active {
-            transform: translateY(6px);
+            transform: translateY(3px);
             box-shadow: 0 0 0 var(--primary-brown);
         }
 
@@ -201,7 +209,7 @@
             opacity: 0.6;
             background: #d7ccc8 !important;
             cursor: not-allowed;
-            transform: translateY(6px);
+            transform: translateY(3px);
             box-shadow: none;
         }
 
@@ -223,55 +231,55 @@
         }
 
         .icon-emoji {
-            font-size: 20px;
+            font-size: 14px;
         }
 
         .grid-menu {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
             width: 100%;
         }
 
         .menu-item {
             background: #fffdf5;
             border: 2px solid var(--primary-brown);
-            border-radius: 18px;
-            padding: 18px 12px;
+            border-radius: 10px;
+            padding: 8px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 4px 4px 0 var(--shadow-color);
+            box-shadow: 2px 2px 0 var(--shadow-color);
         }
 
         .menu-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 4px 8px 0 var(--shadow-color);
+            transform: translateY(-2px);
+            box-shadow: 2px 4px 0 var(--shadow-color);
             background: var(--bg-cream);
         }
 
         .menu-item:active {
             transform: translateY(0);
-            box-shadow: 2px 2px 0 var(--shadow-color);
+            box-shadow: 1px 1px 0 var(--shadow-color);
         }
 
         .menu-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 2px;
         }
 
         .menu-text {
             font-family: 'ZCOOL KuaiLe', cursive;
-            font-size: 14px;
+            font-size: 10px;
             color: var(--text-dark);
         }
 
         .footer-deco {
-            margin-top: 25px;
-            font-size: 12px;
+            margin-top: 8px;
+            font-size: 9px;
             color: var(--text-light);
             text-align: center;
             width: 100%;
@@ -280,6 +288,149 @@
         .footer-bird {
             display: inline-block;
             animation: float 2s ease-in-out infinite;
+        }
+
+        /* 飞翔的小鸟 */
+        .flying-birds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bird {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.7;
+            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));
+        }
+
+        .bird-1 {
+            animation: fly1 12s linear infinite;
+            top: 15%;
+        }
+
+        .bird-2 {
+            animation: fly2 15s linear infinite;
+            top: 25%;
+            animation-delay: -3s;
+        }
+
+        .bird-3 {
+            animation: fly3 10s linear infinite;
+            top: 70%;
+            animation-delay: -5s;
+        }
+
+        .bird-4 {
+            animation: fly4 18s linear infinite;
+            top: 80%;
+            animation-delay: -8s;
+        }
+
+        .bird-5 {
+            animation: fly5 8s linear infinite;
+            top: 10%;
+            animation-delay: -2s;
+            font-size: 14px;
+        }
+
+        .bird-6 {
+            animation: fly6 14s linear infinite;
+            top: 85%;
+            animation-delay: -6s;
+            font-size: 16px;
+        }
+
+        .bird-7 {
+            animation: fly1 9s linear infinite;
+            top: 5%;
+            animation-delay: -4s;
+            font-size: 18px;
+        }
+
+        .bird-8 {
+            animation: fly2 11s linear infinite;
+            top: 45%;
+            animation-delay: -7s;
+            font-size: 22px;
+        }
+
+        .bird-9 {
+            animation: fly3 16s linear infinite;
+            top: 60%;
+            animation-delay: -2s;
+            font-size: 15px;
+        }
+
+        .bird-10 {
+            animation: fly4 13s linear infinite;
+            top: 35%;
+            animation-delay: -9s;
+            font-size: 19px;
+        }
+
+        .bird-11 {
+            animation: fly5 11s linear infinite;
+            top: 90%;
+            animation-delay: -1s;
+            font-size: 16px;
+        }
+
+        .bird-12 {
+            animation: fly6 8s linear infinite;
+            top: 20%;
+            animation-delay: -5s;
+            font-size: 14px;
+        }
+
+        @keyframes fly1 {
+            0% { left: -5%; transform: scaleX(1) translateY(0); }
+            25% { transform: scaleX(1) translateY(-15px); }
+            50% { transform: scaleX(1) translateY(10px); }
+            75% { transform: scaleX(1) translateY(-8px); }
+            100% { left: 105%; transform: scaleX(1) translateY(0); }
+        }
+
+        @keyframes fly2 {
+            0% { left: 105%; transform: scaleX(-1) translateY(0); }
+            20% { transform: scaleX(-1) translateY(20px); }
+            40% { transform: scaleX(-1) translateY(-10px); }
+            60% { transform: scaleX(-1) translateY(15px); }
+            80% { transform: scaleX(-1) translateY(-5px); }
+            100% { left: -5%; transform: scaleX(-1) translateY(0); }
+        }
+
+        @keyframes fly3 {
+            0% { left: -5%; transform: scaleX(1) translateY(0) rotate(-5deg); }
+            30% { transform: scaleX(1) translateY(-20px) rotate(5deg); }
+            60% { transform: scaleX(1) translateY(15px) rotate(-3deg); }
+            100% { left: 105%; transform: scaleX(1) translateY(0) rotate(0deg); }
+        }
+
+        @keyframes fly4 {
+            0% { left: 105%; transform: scaleX(-1) translateY(0); }
+            50% { transform: scaleX(-1) translateY(-25px); }
+            100% { left: -5%; transform: scaleX(-1) translateY(0); }
+        }
+
+        @keyframes fly5 {
+            0% { left: 30%; transform: scaleX(1) translateY(0) scale(1); }
+            25% { left: 50%; transform: scaleX(1) translateY(-30px) scale(1.1); }
+            50% { left: 70%; transform: scaleX(-1) translateY(0) scale(1); }
+            75% { left: 50%; transform: scaleX(-1) translateY(20px) scale(0.9); }
+            100% { left: 30%; transform: scaleX(1) translateY(0) scale(1); }
+        }
+
+        @keyframes fly6 {
+            0% { left: -5%; transform: scaleX(1) translateY(0); }
+            33% { transform: scaleX(1) translateY(-35px); }
+            66% { transform: scaleX(1) translateY(20px); }
+            100% { left: 105%; transform: scaleX(1) translateY(0); }
         }
 
         /* Toast */
@@ -652,6 +803,22 @@
     </style>
 </head>
 <body>
+    <!-- 飞翔的小鸟背景 -->
+    <div class="flying-birds">
+        <div class="bird bird-1">🐦</div>
+        <div class="bird bird-2">🐤</div>
+        <div class="bird bird-3">🐥</div>
+        <div class="bird bird-4">🐦</div>
+        <div class="bird bird-5">🕊️</div>
+        <div class="bird bird-6">🐤</div>
+        <div class="bird bird-7">🐥</div>
+        <div class="bird bird-8">🐦</div>
+        <div class="bird bird-9">🐤</div>
+        <div class="bird bird-10">🕊️</div>
+        <div class="bird bird-11">🐥</div>
+        <div class="bird bird-12">🐦</div>
+    </div>
+
     <div class="app-container">
         <header class="header">
             <div class="avatar-wrapper">
@@ -694,28 +861,25 @@
         <div class="grid-menu">
             <div class="menu-item" id="settingsBtn">
                 <div class="menu-icon">&#9881;&#65039;</div>
-                <div class="menu-text">酒馆设置</div>
+                <div class="menu-text">设置</div>
             </div>
             <div class="menu-item" id="accountBtn">
                 <div class="menu-icon">&#128100;</div>
-                <div class="menu-text" id="accountText">账号绑定</div>
+                <div class="menu-text" id="accountText">账号</div>
             </div>
             <div class="menu-item" id="channelBtn">
                 <div class="menu-icon">&#9729;&#65039;</div>
-                <div class="menu-text">渠道信息</div>
+                <div class="menu-text">渠道</div>
             </div>
             <div class="menu-item" id="logsBtn">
                 <div class="menu-icon">&#128220;</div>
-                <div class="menu-text">运行日志</div>
+                <div class="menu-text">日志</div>
             </div>
-        </div>
-
-        <div style="display: flex; gap: 10px; width: 100%; margin-top: 15px;">
-            <div class="menu-item" id="daidaiBtn" style="flex: 1;">
+            <div class="menu-item" id="daidaiBtn">
                 <div class="menu-icon">&#127758;</div>
                 <div class="menu-text">API站</div>
             </div>
-            <div class="menu-item" id="profileBtn" style="flex: 1;">
+            <div class="menu-item" id="profileBtn">
                 <div class="menu-icon">&#128522;</div>
                 <div class="menu-text">我的</div>
             </div>
@@ -728,6 +892,39 @@
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <!-- 免责声明弹窗 -->
+    <div class="modal-overlay" id="disclaimerModal" style="z-index: 999;">
+        <div class="modal" style="max-width: 320px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--accent-orange), var(--primary-brown)); justify-content: center;">
+                <h2 style="color: #fff;">🐦 小鸟有话说~</h2>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 15px;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🙈</div>
+                <div style="font-family: 'ZCOOL KuaiLe', cursive; font-size: 16px; color: var(--primary-brown); margin-bottom: 12px;">
+                    欢迎来到呆呆鸟酒馆！
+                </div>
+                <div style="background: var(--bg-cream); border-radius: 12px; padding: 12px; text-align: left; font-size: 12px; line-height: 1.8; color: var(--text-dark); border: 2px dashed var(--accent-orange);">
+                    <p>🌟 在开始之前，小鸟想跟你说几句话~</p>
+                    <p>🐤 呆呆鸟API只是一个小小的中转站，对于使用API生成的内容，小鸟<b>完全不知情</b>也<b>无法控制</b>哦~</p>
+                    <p>💕 小鸟希望大家都是<b>善良的小可爱</b>，不要用来生成任何违法违规、伤害他人的内容呢！</p>
+                    <p>🚫 如果有人用来做坏事，那是他们的责任，和小鸟没有关系哦~</p>
+                    <p>✨ 请文明使用，做一个<b>可爱又守法</b>的好朋友吧！</p>
+                </div>
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 2px dashed var(--text-light);">
+                    <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 13px;">
+                        <input type="checkbox" id="agreeCheckbox" style="width: 18px; height: 18px; accent-color: var(--primary-brown);">
+                        <span>我已阅读并同意以上内容 💝</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: center; padding: 12px;">
+                <button class="btn-3d btn-success" id="agreeBtn" disabled style="padding: 10px 30px; opacity: 0.5;">
+                    🎉 我同意，进入酒馆！
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- 登录弹窗 -->
     <div class="modal-overlay" id="loginModal">
@@ -948,9 +1145,9 @@
         function updateAccountUI() {
             var text = document.getElementById('accountText');
             if (userInfo && userInfo.userEmail) {
-                text.textContent = '已绑定';
+                text.textContent = '已登录';
             } else {
-                text.textContent = '账号绑定';
+                text.textContent = '账号';
             }
         }
 
@@ -1210,7 +1407,8 @@
                         items.forEach(function(m) {
                             var status = m.mac === '1' ? '&#9989;' : '&#128295;';
                             var title = m.title ? '[' + m.title + '] ' : '';
-                            var price = m.num ? '&#165;' + (parseFloat(m.price) * parseFloat(m.num)).toFixed(2) + '/条' : '';
+                            var priceVal = m.num ? (parseFloat(m.price) * parseFloat(m.num)) : 0;
+                            var price = m.num ? (priceVal > 0 ? '&#165;' + priceVal.toFixed(2) + '/条' : '按量计费') : '';
                             html += '<div class="channel-item" style="display:flex;justify-content:space-between;align-items:center;">' +
                                 '<div><span>' + status + '</span> ' + title + m.module + '</div>' +
                                 '<div style="font-size:10px;color:var(--success-green);">' + price + '</div>' +
@@ -1288,7 +1486,39 @@
             updateAccountUI();
         }
 
+        // 免责声明弹窗
+        function checkDisclaimer() {
+            var agreed = localStorage.getItem('disclaimerAgreed');
+            if (!agreed) {
+                document.getElementById('disclaimerModal').classList.add('show');
+                document.querySelector('.app-container').style.filter = 'blur(5px)';
+                document.querySelector('.flying-birds').style.filter = 'blur(3px)';
+            }
+        }
+
+        function setupDisclaimer() {
+            var checkbox = document.getElementById('agreeCheckbox');
+            var btn = document.getElementById('agreeBtn');
+
+            checkbox.addEventListener('change', function() {
+                btn.disabled = !this.checked;
+                btn.style.opacity = this.checked ? '1' : '0.5';
+            });
+
+            btn.addEventListener('click', function() {
+                if (checkbox.checked) {
+                    localStorage.setItem('disclaimerAgreed', 'true');
+                    document.getElementById('disclaimerModal').classList.remove('show');
+                    document.querySelector('.app-container').style.filter = '';
+                    document.querySelector('.flying-birds').style.filter = '';
+                    showToast('欢迎来到呆呆鸟酒馆~ 🐦', 'success');
+                }
+            });
+        }
+
         // 初始化
+        checkDisclaimer();
+        setupDisclaimer();
         updateStatus();
         setInterval(updateStatus, 5000);
         updateAccountUI();
