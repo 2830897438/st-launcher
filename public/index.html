@@ -3,66 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chloe小窝</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <title>呆呆鸟酒馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --c-pink: #FF9AA2;
-            --c-pink-light: #FFB7B2;
-            --c-melon: #FFDAC1;
-            --c-yellow: #E2F0CB;
-            --c-mint: #B5EAD7;
-            --c-blue: #C7CEEA;
-            --c-text: #6d5c7d;
-            --c-white: #ffffff;
-            --shadow: 4px 4px 0px rgba(109, 92, 125, 0.2);
-            --border: 3px solid #6d5c7d;
+            --primary-brown: #8d6e63;
+            --accent-orange: #ffab91;
+            --bg-cream: #fff8e1;
+            --text-dark: #5d4037;
+            --text-light: #a1887f;
+            --success-green: #81c784;
+            --error-red: #e57373;
+            --shadow-color: rgba(93, 64, 55, 0.3);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
-            background-color: #fdf6e3;
-            background-image:
-                radial-gradient(var(--c-mint) 15%, transparent 16%),
-                radial-gradient(var(--c-pink-light) 15%, transparent 16%);
-            background-size: 60px 60px;
-            background-position: 0 0, 30px 30px;
+            background-color: var(--bg-cream);
+            background-image: radial-gradient(var(--accent-orange) 8%, transparent 8%);
+            background-size: 30px 30px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'ZCOOL KuaiLe', 'Press Start 2P', cursive;
-            color: var(--c-text);
+            font-family: 'Nunito', 'ZCOOL KuaiLe', sans-serif;
+            color: var(--text-dark);
             padding: 15px;
             overflow-x: hidden;
         }
 
-        .cloud-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.6;
-        }
-        .cloud {
-            position: absolute;
-            background: #fff;
-            border-radius: 20px;
-            animation: floatCloud linear infinite;
-        }
-        @keyframes floatCloud {
-            from { transform: translateX(-100px); }
-            to { transform: translateX(120vw); }
-        }
-
         .app-container {
             width: 100%;
-            max-width: 380px;
-            background: var(--c-white);
-            border: var(--border);
-            border-radius: 25px;
-            box-shadow: 8px 8px 0 #FF9AA2;
+            max-width: 360px;
+            background: #fffdf5;
+            border: 3px solid var(--primary-brown);
+            border-radius: 30px;
+            box-shadow: 8px 8px 0 var(--primary-brown);
             padding: 25px 20px;
             position: relative;
             z-index: 1;
@@ -77,196 +60,270 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
-            position: relative;
         }
 
         .avatar-wrapper {
-            width: 100px;
-            height: 100px;
-            background: var(--c-blue);
-            border: var(--border);
+            width: 110px;
+            height: 110px;
+            background: linear-gradient(135deg, var(--accent-orange), var(--primary-brown));
+            border: 4px solid var(--primary-brown);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             position: relative;
             overflow: hidden;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 8px 20px var(--shadow-color);
         }
 
-        .pixel-cat {
-            width: 70%;
-            height: 70%;
-            image-rendering: pixelated;
-            animation: bob 2s infinite ease-in-out;
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         h1 {
-            font-size: 22px;
-            color: var(--c-text);
-            margin: 10px 0;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 26px;
+            color: var(--primary-brown);
+            margin: 8px 0;
             letter-spacing: 2px;
-            text-shadow: 2px 2px 0 var(--c-pink-light);
+            text-shadow: 2px 2px 0 var(--accent-orange);
         }
 
         .subtitle {
-            font-size: 12px;
-            color: #999;
-            margin-top: -5px;
-            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 12px;
         }
 
         .status-badge {
-            background: #fff;
-            border: 2px solid var(--c-text);
-            padding: 5px 15px;
-            border-radius: 20px;
+            background: #fffdf5;
+            border: 2px solid var(--primary-brown);
+            padding: 8px 18px;
+            border-radius: 25px;
             font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 2px 2px 0 #ddd;
+            gap: 10px;
+            box-shadow: 3px 3px 0 var(--shadow-color);
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.2s;
         }
-        .status-badge:active { transform: scale(0.95); }
-        .status-badge.online { border-color: var(--c-mint); background: #f0fff4; }
 
-        .status-heart {
+        .status-badge:active {
+            transform: scale(0.95);
+        }
+
+        .status-badge.online {
+            border-color: var(--success-green);
+            background: #f1f8e9;
+        }
+
+        .status-dot {
             width: 12px;
             height: 12px;
-            background: #ccc;
-            transform: rotate(45deg);
+            background: #bdbdbd;
+            border-radius: 50%;
             position: relative;
         }
-        .status-heart::before, .status-heart::after {
+
+        .status-dot.active {
+            background: var(--success-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-dot.active::after {
             content: "";
-            width: 12px; height: 12px;
-            background: #ccc;
-            border-radius: 50%;
             position: absolute;
-        }
-        .status-heart::before { left: -6px; }
-        .status-heart::after { top: -6px; }
-
-        .status-heart.active { background: #ff5555; animation: heartbeat 1.2s infinite; }
-        .status-heart.active::before, .status-heart.active::after { background: #ff5555; }
-
-        @keyframes heartbeat {
-            0% { transform: rotate(45deg) scale(1); }
-            15% { transform: rotate(45deg) scale(1.2); }
-            30% { transform: rotate(45deg) scale(1); }
-            45% { transform: rotate(45deg) scale(1.2); }
-            100% { transform: rotate(45deg) scale(1); }
+            width: 100%;
+            height: 100%;
+            background: var(--success-green);
+            border-radius: 50%;
+            animation: ripple 1.5s infinite;
         }
 
-        @keyframes bob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(5px); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
-        .main-action { width: 100%; margin: 15px 0 25px; }
-        .btn-group { display: flex; gap: 12px; width: 100%; }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
 
-        .pixel-btn {
+        .main-action {
+            width: 100%;
+            margin: 20px 0 25px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-3d {
             flex: 1;
-            border: var(--border);
-            border-radius: 12px;
-            padding: 15px 10px;
-            font-family: inherit;
+            background: var(--accent-orange);
+            border: 3px solid var(--primary-brown);
+            border-radius: 15px;
+            padding: 16px 12px;
+            font-family: 'ZCOOL KuaiLe', cursive;
             font-size: 16px;
             cursor: pointer;
             position: relative;
-            box-shadow: 0 4px 0 var(--c-text);
+            box-shadow: 0 6px 0 var(--primary-brown);
             transition: all 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            color: var(--c-text);
+            color: var(--text-dark);
             font-weight: bold;
         }
 
-        .pixel-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 var(--c-text);
+        .btn-3d:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 var(--primary-brown);
         }
 
-        .pixel-btn:disabled {
-            opacity: 0.7;
-            background: #e0e0e0 !important;
+        .btn-3d:disabled {
+            opacity: 0.6;
+            background: #d7ccc8 !important;
             cursor: not-allowed;
-            transform: translateY(4px);
+            transform: translateY(6px);
             box-shadow: none;
         }
 
-        .btn-pink { background: var(--c-pink-light); }
-        .btn-mint { background: var(--c-mint); }
-        .btn-blue { background: var(--c-blue); }
-        .btn-yellow { background: var(--c-yellow); }
+        .btn-primary {
+            background: var(--accent-orange);
+        }
 
-        .icon-svg { width: 20px; height: 20px; fill: var(--c-text); }
+        .btn-success {
+            background: var(--success-green);
+        }
+
+        .btn-danger {
+            background: var(--error-red);
+            color: white;
+        }
+
+        .btn-info {
+            background: #90caf9;
+        }
+
+        .icon-emoji {
+            font-size: 20px;
+        }
 
         .grid-menu {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             width: 100%;
         }
 
         .menu-item {
-            background: #fff;
-            border: 2px solid var(--c-text);
-            border-radius: 15px;
-            padding: 15px 5px;
+            background: #fffdf5;
+            border: 2px solid var(--primary-brown);
+            border-radius: 18px;
+            padding: 18px 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 3px 3px 0 #eee;
+            box-shadow: 4px 4px 0 var(--shadow-color);
         }
 
         .menu-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 3px 6px 0 #eee;
-            background: var(--c-yellow);
+            transform: translateY(-4px);
+            box-shadow: 4px 8px 0 var(--shadow-color);
+            background: var(--bg-cream);
         }
 
-        .menu-icon-box {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .menu-item:active {
+            transform: translateY(0);
+            box-shadow: 2px 2px 0 var(--shadow-color);
+        }
+
+        .menu-icon {
+            font-size: 32px;
             margin-bottom: 8px;
-            background: rgba(0,0,0,0.03);
-            border-radius: 10px;
         }
 
-        .menu-icon-svg { width: 24px; height: 24px; }
-
-        .menu-text { font-size: 12px; color: var(--c-text); text-align: center; }
+        .menu-text {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
 
         .footer-deco {
-            margin-top: 30px;
+            margin-top: 25px;
             font-size: 12px;
-            color: #aaa;
+            color: var(--text-light);
             text-align: center;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
         }
-        .footer-heart { color: #ff5555; display: inline-block; animation: heartbeat 2s infinite; }
 
+        .footer-bird {
+            display: inline-block;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--primary-brown);
+            color: white;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 14px;
+            border: none;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            z-index: 999;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success-green);
+            color: var(--text-dark);
+        }
+
+        .toast.error {
+            background: var(--error-red);
+            color: white;
+        }
+
+        /* Modal */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(109, 92, 125, 0.5);
-            backdrop-filter: blur(2px);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(93, 64, 55, 0.6);
+            backdrop-filter: blur(3px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -275,45 +332,54 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-        .modal-overlay.show { opacity: 1; visibility: visible; }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
 
         .modal {
-            background: #fff;
-            border: var(--border);
-            border-radius: 20px;
-            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            background: #fffdf5;
+            border: 3px solid var(--primary-brown);
+            border-radius: 25px;
+            box-shadow: 10px 10px 0 var(--shadow-color);
             width: 90%;
             max-width: 350px;
             max-height: 80vh;
             display: flex;
             flex-direction: column;
-            transform: scale(0.8) rotate(-2deg);
-            transition: cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .modal-overlay.show .modal { transform: scale(1) rotate(0deg); }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
 
         .modal-header {
-            background: var(--c-blue);
-            padding: 15px;
+            background: var(--accent-orange);
+            padding: 15px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: var(--border);
-            border-radius: 16px 16px 0 0;
+            border-bottom: 3px solid var(--primary-brown);
+            border-radius: 22px 22px 0 0;
         }
+
         .modal-header h2 {
-            font-size: 16px;
-            color: #fff;
-            text-shadow: 1px 1px 0 var(--c-text);
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 18px;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .modal-close {
-            background: #ff5555;
-            border: 2px solid var(--c-text);
-            width: 28px; height: 28px;
+            background: var(--error-red);
+            border: 2px solid var(--primary-brown);
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             color: white;
             font-size: 18px;
@@ -321,13 +387,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
         }
 
-        .modal-body { padding: 20px; overflow-y: auto; font-size: 14px; }
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
 
         .modal-footer {
             padding: 15px;
-            border-top: 2px dashed #ddd;
+            border-top: 2px dashed var(--text-light);
             display: flex;
             justify-content: flex-end;
             gap: 10px;
@@ -335,19 +406,19 @@
 
         .form-input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid var(--text-light);
+            border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
             outline: none;
             transition: 0.3s;
-            background: #f9f9f9;
+            background: #fffdf5;
         }
+
         .form-input:focus {
-            border-color: var(--c-mint);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(181, 234, 215, 0.5);
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.2);
         }
 
         .toggle-switch {
@@ -356,230 +427,303 @@
             height: 26px;
             display: inline-block;
         }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
         .toggle-slider {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #ccc;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #d7ccc8;
             border-radius: 26px;
-            border: 2px solid var(--c-text);
+            border: 2px solid var(--primary-brown);
             transition: 0.3s;
             cursor: pointer;
         }
+
         .toggle-slider:before {
             content: "";
             position: absolute;
-            width: 18px; height: 18px;
-            left: 2px; bottom: 2px;
+            width: 18px;
+            height: 18px;
+            left: 2px;
+            bottom: 2px;
             background: white;
             border-radius: 50%;
-            border: 2px solid var(--c-text);
+            border: 2px solid var(--primary-brown);
             transition: 0.3s;
         }
-        .toggle-switch input:checked + .toggle-slider { background: var(--c-mint); }
-        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
 
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--c-text);
-            color: white;
-            border-radius: 50px;
-            padding: 12px 24px;
-            font-size: 14px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 999;
-            opacity: 0;
-            transition: all 0.3s;
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--success-green);
         }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        .toast.success { background: var(--c-mint); color: var(--c-text); }
-        .toast.error { background: var(--c-pink); color: #fff; }
 
-        .version-list { max-height: 200px; overflow-y: auto; }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .version-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
         .version-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             margin: 8px 0;
-            background: #f9f9f9;
-            border-radius: 10px;
+            background: #fffdf5;
+            border-radius: 12px;
             border: 2px solid transparent;
             cursor: pointer;
             transition: 0.2s;
         }
-        .version-item:hover { background: var(--c-yellow); }
-        .version-item.active { border-color: var(--c-mint); background: #f0fff4; }
-        .version-main { flex: 1; display: flex; justify-content: space-between; align-items: center; }
-        .version-name { font-weight: bold; }
-        .version-status { font-size: 12px; color: #999; padding: 2px 8px; background: #eee; border-radius: 10px; }
-        .version-status.ready { background: var(--c-mint); color: var(--c-text); }
+
+        .version-item:hover {
+            background: var(--bg-cream);
+        }
+
+        .version-item.active {
+            border-color: var(--success-green);
+            background: #f1f8e9;
+        }
+
+        .version-main {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .version-name {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .version-status {
+            font-size: 12px;
+            color: var(--text-light);
+            padding: 3px 10px;
+            background: #efebe9;
+            border-radius: 10px;
+        }
+
+        .version-status.ready {
+            background: var(--success-green);
+            color: var(--text-dark);
+        }
+
         .version-uninstall {
-            width: 24px; height: 24px;
-            background: var(--c-pink);
+            width: 26px;
+            height: 26px;
+            background: var(--error-red);
             border: none;
             border-radius: 50%;
             color: white;
             cursor: pointer;
             margin-left: 8px;
+            font-size: 14px;
         }
 
         .setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px;
-            background: #f9f9f9;
+            padding: 14px;
+            background: #fffdf5;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #efebe9;
+        }
+
+        .channel-group {
+            margin-bottom: 15px;
+        }
+
+        .channel-group-title {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .channel-item {
+            padding: 10px 12px;
+            background: #fffdf5;
             border-radius: 10px;
+            margin: 5px 0;
+            font-size: 12px;
+            border: 1px solid #efebe9;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .log-entry.error {
+            color: #ff6b6b;
+        }
+
+        .log-entry .time {
+            color: #888;
+        }
+
+        .user-info-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .user-avatar-large {
+            font-size: 60px;
             margin-bottom: 10px;
         }
 
-        .channel-group { margin-bottom: 15px; }
-        .channel-group-title { font-weight: bold; margin-bottom: 8px; color: var(--c-text); }
-        .channel-item {
-            padding: 8px 12px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            margin: 4px 0;
-            font-size: 12px;
+        .user-name {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-dark);
         }
 
-        .log-entry { padding: 4px 0; font-size: 12px; font-family: monospace; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .log-entry.error { color: #ff6b6b; }
-        .log-entry .time { color: #888; }
+        .user-email {
+            font-size: 12px;
+            color: var(--text-light);
+        }
 
-        .user-info-card { text-align: center; padding: 20px; }
-        .user-avatar-large { font-size: 50px; margin-bottom: 10px; }
-        .user-name { font-size: 18px; font-weight: bold; }
-        .user-email { font-size: 12px; color: #999; }
         .balance-card {
-            background: linear-gradient(135deg, var(--c-mint), var(--c-blue));
-            border-radius: 15px;
+            background: linear-gradient(135deg, var(--accent-orange), var(--primary-brown));
+            border-radius: 18px;
             padding: 20px;
             margin-top: 15px;
             text-align: center;
+            border: 2px solid var(--primary-brown);
         }
-        .balance-label { font-size: 12px; color: var(--c-text); }
-        .balance-value { font-size: 28px; font-weight: bold; color: var(--c-text); }
+
+        .balance-label {
+            font-size: 12px;
+            color: #fffdf5;
+        }
+
+        .balance-value {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: #fffdf5;
+        }
 
         .endpoint-box {
-            background: var(--c-text);
-            color: var(--c-mint);
-            padding: 10px;
-            border-radius: 8px;
-            font-family: monospace;
+            background: var(--primary-brown);
+            color: var(--bg-cream);
+            padding: 12px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
             font-size: 12px;
             word-break: break-all;
             margin-top: 10px;
             cursor: pointer;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--c-pink-light); border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-orange);
+            border-radius: 10px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-
-    <div class="cloud-bg">
-        <div class="cloud" style="width: 100px; height: 40px; top: 10%; left: -10%; animation-duration: 25s;"></div>
-        <div class="cloud" style="width: 60px; height: 25px; top: 30%; left: -5%; animation-duration: 18s; animation-delay: 5s;"></div>
-        <div class="cloud" style="width: 80px; height: 35px; top: 70%; left: -8%; animation-duration: 22s; animation-delay: 2s;"></div>
-    </div>
-
     <div class="app-container">
         <header class="header">
             <div class="avatar-wrapper">
-                <svg class="pixel-cat" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 30 L30 10 L40 30 L60 30 L70 10 L80 30 L90 50 L90 80 L10 80 L10 50 Z" fill="#fff" stroke="#6d5c7d" stroke-width="4"/>
-                    <rect x="25" y="50" width="10" height="10" fill="#6d5c7d"/>
-                    <rect x="65" y="50" width="10" height="10" fill="#6d5c7d"/>
-                    <path d="M45 65 L55 65 L50 70 Z" fill="#FF9AA2"/>
-                    <path d="M20 60 L5 60" stroke="#6d5c7d" stroke-width="3"/>
-                    <path d="M20 65 L5 70" stroke="#6d5c7d" stroke-width="3"/>
-                    <path d="M80 60 L95 60" stroke="#6d5c7d" stroke-width="3"/>
-                    <path d="M80 65 L95 70" stroke="#6d5c7d" stroke-width="3"/>
-                </svg>
+                <img src="https://youke1.picui.cn/s1/2025/11/25/6925988c61444.jpg" alt="呆呆鸟" onerror="this.style.display='none'">
             </div>
-            <h1>Chloe小窝</h1>
-            <div class="subtitle">Pixel World v1.1</div>
+            <h1>呆呆鸟酒馆</h1>
+            <div class="subtitle">SillyTavern Launcher v1.1</div>
 
             <div class="status-badge" id="statusBadge">
-                <div class="status-heart" id="statusDot"></div>
-                <span id="statusText">Zzz... 未运行</span>
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">休息中...</span>
             </div>
         </header>
 
         <div class="main-action">
             <div class="btn-group" id="offlineButtons" style="display: flex;">
-                <button class="pixel-btn btn-mint" id="startBtn">
-                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    启动小窝
+                <button class="btn-3d btn-primary" id="startBtn">
+                    <span class="icon-emoji">&#127866;</span>
+                    开张营业
                 </button>
             </div>
             <div class="btn-group" id="loadingButtons" style="display: none;">
-                <button class="pixel-btn btn-yellow" disabled>
-                    <svg class="icon-svg" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"/></svg>
-                    唤醒中...
+                <button class="btn-3d" disabled>
+                    <span class="icon-emoji" style="animation: spin 1s linear infinite; display: inline-block;">&#9203;</span>
+                    准备中...
                 </button>
             </div>
             <div class="btn-group" id="onlineButtons" style="display: none;">
-                <button class="pixel-btn btn-blue" id="enterBtn">
-                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                    进入
+                <button class="btn-3d btn-success" id="enterBtn">
+                    <span class="icon-emoji">&#128233;</span>
+                    进入酒馆
                 </button>
-                <button class="pixel-btn btn-pink" id="stopBtn">
-                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
-                    休息
+                <button class="btn-3d btn-danger" id="stopBtn">
+                    <span class="icon-emoji">&#128164;</span>
+                    打烊
                 </button>
             </div>
         </div>
 
         <div class="grid-menu">
             <div class="menu-item" id="settingsBtn">
-                <div class="menu-icon-box" style="background: #E2F0CB;">
-                    <svg class="menu-icon-svg" viewBox="0 0 24 24"><path fill="#6d5c7d" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                </div>
-                <div class="menu-text">设置</div>
+                <div class="menu-icon">&#9881;&#65039;</div>
+                <div class="menu-text">酒馆设置</div>
             </div>
             <div class="menu-item" id="accountBtn">
-                <div class="menu-icon-box" style="background: #FFDAC1;">
-                    <svg class="menu-icon-svg" viewBox="0 0 24 24"><path fill="#6d5c7d" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                </div>
-                <div class="menu-text" id="accountText">账号</div>
-            </div>
-            <div class="menu-item" id="daidaiBtn">
-                <div class="menu-icon-box" style="background: #C7CEEA;">
-                    <svg class="menu-icon-svg" viewBox="0 0 24 24"><path fill="#6d5c7d" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-                </div>
-                <div class="menu-text">API站</div>
-            </div>
-            <div class="menu-item" id="logsBtn">
-                <div class="menu-icon-box" style="background: #FFB7B2;">
-                    <svg class="menu-icon-svg" viewBox="0 0 24 24"><path fill="#6d5c7d" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                </div>
-                <div class="menu-text">日志</div>
+                <div class="menu-icon">&#128100;</div>
+                <div class="menu-text" id="accountText">账号绑定</div>
             </div>
             <div class="menu-item" id="channelBtn">
-                <div class="menu-icon-box" style="background: #B5EAD7;">
-                    <svg class="menu-icon-svg" viewBox="0 0 24 24"><path fill="#6d5c7d" d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10z"/></svg>
-                </div>
-                <div class="menu-text">渠道</div>
+                <div class="menu-icon">&#9729;&#65039;</div>
+                <div class="menu-text">渠道信息</div>
             </div>
-            <div class="menu-item" id="profileBtn">
-                <div class="menu-icon-box" style="background: #f9f9f9; border: 1px dashed #ccc;">
-                    <svg class="menu-icon-svg" viewBox="0 0 24 24"><path fill="#6d5c7d" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
-                </div>
+            <div class="menu-item" id="logsBtn">
+                <div class="menu-icon">&#128220;</div>
+                <div class="menu-text">运行日志</div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; width: 100%; margin-top: 15px;">
+            <div class="menu-item" id="daidaiBtn" style="flex: 1;">
+                <div class="menu-icon">&#127758;</div>
+                <div class="menu-text">API站</div>
+            </div>
+            <div class="menu-item" id="profileBtn" style="flex: 1;">
+                <div class="menu-icon">&#128522;</div>
                 <div class="menu-text">我的</div>
             </div>
         </div>
 
         <footer class="footer-deco">
-            <div>Made with <span class="footer-heart">♥</span> by Chloe</div>
-            <div id="versionInfo" style="opacity: 0.6;">v1.1.0</div>
+            <div>Made with <span class="footer-bird">&#128038;</span> by 呆呆鸟</div>
+            <div id="versionInfo" style="opacity: 0.6; margin-top: 5px;">v1.1.0</div>
         </footer>
     </div>
 
@@ -589,21 +733,21 @@
     <div class="modal-overlay" id="loginModal">
         <div class="modal">
             <div class="modal-header">
-                <h2>🔑 绑定账号</h2>
-                <div class="modal-close" id="loginClose">×</div>
+                <h2>&#128273; 绑定账号</h2>
+                <div class="modal-close" id="loginClose">&times;</div>
             </div>
             <div class="modal-body">
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:12px; color:#666;">✨ 邮箱</label>
+                    <label style="display:block; margin-bottom:8px; font-size:13px; color:var(--text-light);">&#9993; 邮箱</label>
                     <input type="email" class="form-input" id="loginEmail" placeholder="name@example.com">
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:12px; color:#666;">🔒 密码</label>
+                    <label style="display:block; margin-bottom:8px; font-size:13px; color:var(--text-light);">&#128274; 密码</label>
                     <input type="password" class="form-input" id="loginPassword" placeholder="********">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="pixel-btn btn-blue" id="loginSubmit" style="padding: 10px 20px;">登录</button>
+                <button class="btn-3d btn-success" id="loginSubmit" style="padding: 10px 25px;">登录</button>
             </div>
         </div>
     </div>
@@ -611,23 +755,23 @@
     <!-- 设置弹窗 -->
     <div class="modal-overlay" id="versionModal">
         <div class="modal">
-            <div class="modal-header" style="background: var(--c-yellow);">
-                <h2>⚙️ 设置</h2>
-                <div class="modal-close" id="versionClose">×</div>
+            <div class="modal-header">
+                <h2>&#9881;&#65039; 酒馆设置</h2>
+                <div class="modal-close" id="versionClose">&times;</div>
             </div>
             <div class="modal-body">
                 <div style="margin-bottom: 15px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <span style="font-weight:bold;">📦 版本管理</span>
-                        <button class="pixel-btn btn-mint" id="rescanBtn" style="padding:5px 10px; font-size:12px;">扫描本地</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <span style="font-family:'ZCOOL KuaiLe',cursive; font-weight:bold;">&#128230; 版本管理</span>
+                        <button class="btn-3d btn-info" id="rescanBtn" style="padding:6px 12px; font-size:12px;">扫描本地</button>
                     </div>
                     <div class="version-list" id="versionList">
-                        <div style="text-align:center;padding:20px;color:#999;">加载中...</div>
+                        <div style="text-align:center;padding:20px;color:var(--text-light);">加载中...</div>
                     </div>
                 </div>
 
                 <div class="setting-row">
-                    <span>⚡ 极速模式</span>
+                    <span>&#9889; 极速模式</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="speedOptToggle">
                         <span class="toggle-slider"></span>
@@ -636,7 +780,7 @@
 
                 <div class="setting-row" style="flex-direction:column; align-items:stretch;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span>🔗 API聚合</span>
+                        <span>&#128279; API聚合</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="aggregatorToggle">
                             <span class="toggle-slider"></span>
@@ -645,13 +789,13 @@
                     <div id="aggregatorEndpoint" style="display:none;">
                         <div class="endpoint-box" id="copyEndpoint">
                             <span id="aggregatorUrl">http://127.0.0.1:8080/v1</span>
-                            <div style="font-size:10px; color:#999; margin-top:5px;">点击复制</div>
+                            <div style="font-size:10px; color:var(--accent-orange); margin-top:5px;">&#128203; 点击复制</div>
                         </div>
-                        <div style="background:#f0fff4;padding:8px;border-radius:8px;margin-top:8px;font-size:12px;border:1px dashed var(--c-mint);">
-                            <div style="font-weight:bold;color:var(--c-text);margin-bottom:3px;">🔑 API密钥</div>
-                            <code style="background:#fff;padding:2px 6px;border-radius:4px;color:var(--c-text);">daidaibird</code>
+                        <div style="background:#f1f8e9;padding:10px;border-radius:10px;margin-top:10px;font-size:12px;border:2px dashed var(--success-green);">
+                            <div style="font-weight:bold;color:var(--text-dark);margin-bottom:5px;">&#128273; API密钥</div>
+                            <code style="background:#fffdf5;padding:3px 8px;border-radius:5px;color:var(--primary-brown);">daidaibird</code>
                         </div>
-                        <div id="aggregatorStatus" style="font-size:12px; color:var(--c-mint); margin-top:5px;"></div>
+                        <div id="aggregatorStatus" style="font-size:12px; color:var(--success-green); margin-top:8px;"></div>
                     </div>
                 </div>
             </div>
@@ -661,13 +805,13 @@
     <!-- 渠道弹窗 -->
     <div class="modal-overlay" id="channelModal">
         <div class="modal">
-            <div class="modal-header" style="background: var(--c-mint);">
-                <h2>📡 可用渠道</h2>
-                <div class="modal-close" id="channelClose">×</div>
+            <div class="modal-header" style="background: var(--success-green);">
+                <h2>&#128225; 可用渠道</h2>
+                <div class="modal-close" id="channelClose">&times;</div>
             </div>
             <div class="modal-body" id="channelList">
-                <div style="text-align:center; padding:20px; color:#999;">
-                    <div style="font-size:30px;">🐱</div>
+                <div style="text-align:center; padding:30px; color:var(--text-light);">
+                    <div style="font-size:40px;">&#128038;</div>
                     加载中...
                 </div>
             </div>
@@ -677,14 +821,14 @@
     <!-- 日志弹窗 -->
     <div class="modal-overlay" id="logModal">
         <div class="modal" style="max-width: 400px;">
-            <div class="modal-header" style="background: var(--c-pink-light);">
-                <h2>📝 运行日志</h2>
-                <div class="modal-close" id="logClose">×</div>
+            <div class="modal-header" style="background: var(--error-red);">
+                <h2 style="color:white;">&#128220; 运行日志</h2>
+                <div class="modal-close" id="logClose">&times;</div>
             </div>
-            <div class="modal-body" style="background: #2d1b4e; color: #7dff6b; font-family: monospace; padding: 10px; border-radius: 10px; min-height: 200px; max-height: 300px; overflow-y: auto;" id="logContainer">
+            <div class="modal-body" style="background: #3e2723; color: #a5d6a7; font-family: 'Courier New', monospace; padding: 12px; border-radius: 12px; min-height: 200px; max-height: 300px; overflow-y: auto;" id="logContainer">
             </div>
             <div class="modal-footer">
-                <button class="pixel-btn btn-pink" id="clearLogs" style="padding: 8px 15px;">清空</button>
+                <button class="btn-3d btn-danger" id="clearLogs" style="padding: 8px 18px;">清空日志</button>
             </div>
         </div>
     </div>
@@ -692,24 +836,20 @@
     <!-- 个人信息弹窗 -->
     <div class="modal-overlay" id="profileModal">
         <div class="modal">
-            <div class="modal-header" style="background: var(--c-melon);">
-                <h2>😊 我的</h2>
-                <div class="modal-close" id="profileClose">×</div>
+            <div class="modal-header" style="background: #90caf9;">
+                <h2>&#128522; 我的信息</h2>
+                <div class="modal-close" id="profileClose">&times;</div>
             </div>
             <div class="modal-body" id="profileBody">
-                <div style="text-align:center; padding:30px; color:#999;">
+                <div style="text-align:center; padding:30px; color:var(--text-light);">
                     未登录
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="pixel-btn btn-pink" id="logoutBtn" style="display:none; padding: 8px 15px;">退出登录</button>
+                <button class="btn-3d btn-danger" id="logoutBtn" style="display:none; padding: 8px 18px;">退出登录</button>
             </div>
         </div>
     </div>
-
-    <style>
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    </style>
 
     <script>
     (function() {
@@ -739,14 +879,14 @@
                     if (data.running) {
                         badge.classList.add('online');
                         dot.classList.add('active');
-                        text.textContent = '运行中 ♪';
+                        text.textContent = '营业中~';
                         document.getElementById('offlineButtons').style.display = 'none';
                         document.getElementById('loadingButtons').style.display = 'none';
                         document.getElementById('onlineButtons').style.display = 'flex';
                     } else {
                         badge.classList.remove('online');
                         dot.classList.remove('active');
-                        text.textContent = 'Zzz... 未运行';
+                        text.textContent = '休息中...';
                         document.getElementById('offlineButtons').style.display = 'flex';
                         document.getElementById('loadingButtons').style.display = 'none';
                         document.getElementById('onlineButtons').style.display = 'none';
@@ -769,7 +909,7 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.success) {
-                        showToast('启动成功！', 'success');
+                        showToast('开张啦~', 'success');
                         setTimeout(updateStatus, 1000);
                     } else {
                         showToast(data.message, 'error');
@@ -789,7 +929,7 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.success) {
-                        showToast('已休息~', 'success');
+                        showToast('已打烊~', 'success');
                         updateStatus();
                     } else {
                         showToast(data.message, 'error');
@@ -799,7 +939,7 @@
 
         function enterST() {
             if (!isRunning) {
-                showToast('请先启动小窝~', 'info');
+                showToast('请先开张营业~', 'info');
                 return;
             }
             window.open('http://127.0.0.1:8000', '_blank');
@@ -810,7 +950,7 @@
             if (userInfo && userInfo.userEmail) {
                 text.textContent = '已绑定';
             } else {
-                text.textContent = '账号';
+                text.textContent = '账号绑定';
             }
         }
 
@@ -831,7 +971,7 @@
             .then(function(data) {
                 if (data.code === 200) {
                     userToken = data.token;
-                    userInfo = data.msg; // 保存完整用户信息
+                    userInfo = data.msg;
                     localStorage.setItem('userToken', userToken);
                     localStorage.setItem('userInfo', JSON.stringify(userInfo));
                     showToast('绑定成功！', 'success');
@@ -848,7 +988,7 @@
 
         function loadVersions() {
             var list = document.getElementById('versionList');
-            list.innerHTML = '<div style="text-align:center;padding:20px;color:#999;">加载中...</div>';
+            list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-light);">加载中...</div>';
             fetch(API_BASE + '/api/versions')
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
@@ -865,7 +1005,7 @@
                             '<span class="version-status ' + statusClass + '">' + statusText + '</span>' +
                             '</div>';
                         if (canUninstall) {
-                            html += '<button class="version-uninstall" data-version="' + v.version + '">×</button>';
+                            html += '<button class="version-uninstall" data-version="' + v.version + '">&times;</button>';
                         }
                         html += '</div>';
                     });
@@ -898,7 +1038,7 @@
 
         function uninstallVersion(version) {
             if (isRunning) {
-                showToast('请先停止服务~', 'error');
+                showToast('请先打烊~', 'error');
                 return;
             }
             if (!confirm('确定卸载 ' + version + '？\n\n请先备份data文件夹！')) return;
@@ -916,7 +1056,7 @@
 
         function selectVersion(version, installed) {
             if (isRunning) {
-                showToast('请先停止服务~', 'error');
+                showToast('请先打烊~', 'error');
                 return;
             }
             if (!installed) {
@@ -1026,7 +1166,7 @@
                 .then(function(data) {
                     var container = document.getElementById('logContainer');
                     if (!data.logs || data.logs.length === 0) {
-                        container.innerHTML = '<div style="color:#666;text-align:center;padding:20px;">暂无日志~</div>';
+                        container.innerHTML = '<div style="color:#888;text-align:center;padding:20px;">暂无日志~</div>';
                         return;
                     }
                     var html = '';
@@ -1041,9 +1181,9 @@
 
         function loadChannels() {
             var list = document.getElementById('channelList');
-            list.innerHTML = '<div style="text-align:center;padding:30px;"><div style="font-size:30px;">🐱</div>加载中...</div>';
+            list.innerHTML = '<div style="text-align:center;padding:30px;"><div style="font-size:40px;">&#128038;</div>加载中...</div>';
             if (!userInfo || !userToken || !userInfo.userId) {
-                list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">请先登录查看渠道</div>';
+                list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-light);">请先登录查看渠道</div>';
                 return;
             }
             fetch('https://user.daidaibird.top/api/commodity/getPricing', {
@@ -1054,7 +1194,7 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.code !== 200 || !data.msg || data.msg.length === 0) {
-                        list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">暂无渠道</div>';
+                        list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-light);">暂无渠道</div>';
                         return;
                     }
                     var groups = {};
@@ -1068,12 +1208,12 @@
                         var items = groups[g];
                         html += '<div class="channel-group"><div class="channel-group-title">' + g + ' (' + items.length + ')</div>';
                         items.forEach(function(m) {
-                            var status = m.mac === '1' ? '✅' : '🔧';
+                            var status = m.mac === '1' ? '&#9989;' : '&#128295;';
                             var title = m.title ? '[' + m.title + '] ' : '';
-                            var price = m.num ? '¥' + (parseFloat(m.price) * parseFloat(m.num)).toFixed(2) + '/条' : '';
+                            var price = m.num ? '&#165;' + (parseFloat(m.price) * parseFloat(m.num)).toFixed(2) + '/条' : '';
                             html += '<div class="channel-item" style="display:flex;justify-content:space-between;align-items:center;">' +
                                 '<div><span>' + status + '</span> ' + title + m.module + '</div>' +
-                                '<div style="font-size:10px;color:var(--c-mint);">' + price + '</div>' +
+                                '<div style="font-size:10px;color:var(--success-green);">' + price + '</div>' +
                                 '</div>';
                         });
                         html += '</div>';
@@ -1081,7 +1221,7 @@
                     list.innerHTML = html;
                 })
                 .catch(function() {
-                    list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">加载失败</div>';
+                    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-light);">加载失败</div>';
                 });
         }
 
@@ -1089,14 +1229,13 @@
             var body = document.getElementById('profileBody');
             var logoutBtn = document.getElementById('logoutBtn');
             if (!userInfo || !userToken) {
-                body.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">未绑定账号~</div>';
+                body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">未绑定账号~</div>';
                 logoutBtn.style.display = 'none';
                 return;
             }
-            // 检测旧格式userInfo（没有userId）
             if (!userInfo.userId) {
-                body.innerHTML = '<div style="text-align:center;padding:30px;color:#999;">' +
-                    '<div style="font-size:40px;margin-bottom:10px;">🔄</div>' +
+                body.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-light);">' +
+                    '<div style="font-size:40px;margin-bottom:10px;">&#128260;</div>' +
                     '<div>请退出后重新登录</div>' +
                     '<div style="font-size:12px;margin-top:5px;">(数据格式已更新)</div></div>';
                 logoutBtn.style.display = 'block';
@@ -1116,24 +1255,24 @@
                     keys.forEach(function(k) { totalBalance += parseFloat(k.balance) || 0; });
                     var keysHtml = '';
                     keys.forEach(function(k) {
-                        keysHtml += '<div style="background:#f9f9f9;padding:8px;border-radius:8px;margin:5px 0;font-size:12px;">' +
+                        keysHtml += '<div style="background:#fffdf5;padding:10px;border-radius:10px;margin:6px 0;font-size:12px;border:1px solid #efebe9;">' +
                             '<div style="font-family:monospace;word-break:break-all;">' + k.api_key.substring(0,20) + '...</div>' +
-                            '<div style="color:var(--c-mint);margin-top:4px;">余额: ¥' + k.balance + '</div>' +
+                            '<div style="color:var(--success-green);margin-top:5px;">余额: &#165;' + k.balance + '</div>' +
                             '</div>';
                     });
                     body.innerHTML = '<div class="user-info-card">' +
-                        '<div class="user-avatar-large">😊</div>' +
+                        '<div class="user-avatar-large">&#128038;</div>' +
                         '<div class="user-name">' + userInfo.userEmail.split('@')[0] + '</div>' +
                         '<div class="user-email">' + userInfo.userEmail + '</div>' +
                         '</div>' +
                         '<div class="balance-card">' +
                         '<div class="balance-label">总余额</div>' +
-                        '<div class="balance-value">¥' + totalBalance.toFixed(2) + '</div>' +
+                        '<div class="balance-value">&#165;' + totalBalance.toFixed(2) + '</div>' +
                         '</div>' +
-                        '<div style="margin-top:15px;"><div style="font-weight:bold;margin-bottom:8px;">🔑 API密钥 (' + keys.length + ')</div>' + keysHtml + '</div>';
+                        '<div style="margin-top:15px;"><div style="font-family:\'ZCOOL KuaiLe\',cursive;font-weight:bold;margin-bottom:10px;">&#128273; API密钥 (' + keys.length + ')</div>' + keysHtml + '</div>';
                     logoutBtn.style.display = 'block';
                 } else {
-                    body.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">获取信息失败</div>';
+                    body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">获取信息失败</div>';
                 }
             });
         }
