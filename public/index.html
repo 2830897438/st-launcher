@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>呆呆鸟酒馆</title>
+    <title>呆呆鸟启动器</title>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -824,7 +824,7 @@
             <div class="avatar-wrapper">
                 <img src="https://youke1.picui.cn/s1/2025/11/25/6925988c61444.jpg" alt="呆呆鸟" onerror="this.style.display='none'">
             </div>
-            <h1>呆呆鸟酒馆</h1>
+            <h1>呆呆鸟启动器</h1>
             <div class="subtitle">SillyTavern Launcher v1.1</div>
 
             <div class="status-badge" id="statusBadge">
@@ -837,7 +837,7 @@
             <div class="btn-group" id="offlineButtons" style="display: flex;">
                 <button class="btn-3d btn-primary" id="startBtn">
                     <span class="icon-emoji">&#127866;</span>
-                    开张营业
+                    启动ST
                 </button>
             </div>
             <div class="btn-group" id="loadingButtons" style="display: none;">
@@ -849,11 +849,11 @@
             <div class="btn-group" id="onlineButtons" style="display: none;">
                 <button class="btn-3d btn-success" id="enterBtn">
                     <span class="icon-emoji">&#128233;</span>
-                    进入酒馆
+                    进入ST
                 </button>
                 <button class="btn-3d btn-danger" id="stopBtn">
                     <span class="icon-emoji">&#128164;</span>
-                    打烊
+                    停止
                 </button>
             </div>
         </div>
@@ -976,7 +976,7 @@
     <div class="modal-overlay" id="versionModal">
         <div class="modal">
             <div class="modal-header">
-                <h2>&#9881;&#65039; 酒馆设置</h2>
+                <h2>&#9881;&#65039; 启动器设置</h2>
                 <div class="modal-close" id="versionClose">&times;</div>
             </div>
             <div class="modal-body">
@@ -1099,7 +1099,7 @@
                     if (data.running) {
                         badge.classList.add('online');
                         dot.classList.add('active');
-                        text.textContent = '营业中~';
+                        text.textContent = '运行中~';
                         document.getElementById('offlineButtons').style.display = 'none';
                         document.getElementById('loadingButtons').style.display = 'none';
                         document.getElementById('onlineButtons').style.display = 'flex';
@@ -1129,7 +1129,7 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.success) {
-                        showToast('开张啦~', 'success');
+                        showToast('启动成功~', 'success');
                         setTimeout(updateStatus, 1000);
                     } else {
                         showToast(data.message, 'error');
@@ -1149,7 +1149,7 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.success) {
-                        showToast('已打烊~', 'success');
+                        showToast('已停止~', 'success');
                         updateStatus();
                     } else {
                         showToast(data.message, 'error');
@@ -1159,7 +1159,7 @@
 
         function enterST() {
             if (!isRunning) {
-                showToast('请先开张营业~', 'info');
+                showToast('请先启动~', 'info');
                 return;
             }
             window.open('http://127.0.0.1:8000', '_blank');
@@ -1258,7 +1258,7 @@
 
         function uninstallVersion(version) {
             if (isRunning) {
-                showToast('请先打烊~', 'error');
+                showToast('请先停止~', 'error');
                 return;
             }
             if (!confirm('确定卸载 ' + version + '？\n\n请先备份data文件夹！')) return;
@@ -1276,7 +1276,7 @@
 
         function selectVersion(version, installed) {
             if (isRunning) {
-                showToast('请先打烊~', 'error');
+                showToast('请先停止~', 'error');
                 return;
             }
             if (!installed) {
@@ -1534,7 +1534,7 @@
                     document.getElementById('disclaimerModal').classList.remove('show');
                     document.querySelector('.app-container').style.filter = '';
                     document.querySelector('.flying-birds').style.filter = '';
-                    showToast('欢迎来到呆呆鸟酒馆~ 🐦', 'success');
+                    showToast('欢迎使用呆呆鸟启动器~ 🐦', 'success');
                 }
             });
         }
