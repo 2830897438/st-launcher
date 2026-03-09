@@ -1244,6 +1244,9 @@
                             uninstallVersion(this.getAttribute('data-version'));
                         });
                     });
+                })
+                .catch(function() {
+                    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-light);">加载失败</div>';
                 });
         }
 
@@ -1496,6 +1499,9 @@
                 } else {
                     body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">获取信息失败</div>';
                 }
+            })
+            .catch(function() {
+                body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">加载失败</div>';
             });
         }
 
@@ -1620,8 +1626,9 @@
         });
         document.getElementById('logoutBtn').addEventListener('click', logout);
 
-        // 点击弹窗外部关闭
+        // 点击弹窗外部关闭（免责声明弹窗除外，必须点同意才能关闭）
         document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+            if (overlay.id === 'disclaimerModal') return;
             overlay.addEventListener('click', function(e) {
                 if (e.target === overlay) overlay.classList.remove('show');
             });

@@ -12,46 +12,42 @@ NC='\033[0m'
 echo -e "${GREEN}🐦 呆呆鸟酒馆启动助手 - 安装程序${NC}"
 echo ""
 
-# 检测架构
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64|amd64)
-        BIN="st-launcher-x64"
-        ;;
-    aarch64|arm64)
-        BIN="st-launcher-arm64"
-        ;;
-    *)
-        echo -e "${RED}❌ 不支持的架构: $ARCH${NC}"
-        exit 1
-        ;;
-esac
-
-echo -e "${YELLOW}📦 检测到架构: $ARCH${NC}"
-echo -e "${YELLOW}📥 正在下载 $BIN ...${NC}"
-
-# 下载二进制文件
-DOWNLOAD_URL="https://github.com/2830897438/st-launcher/releases/download/v1.1.0/$BIN"
-INSTALL_DIR="$HOME/st-launcher"
-
-mkdir -p "$INSTALL_DIR"
-cd "$INSTALL_DIR"
-
-if command -v curl &> /dev/null; then
-    curl -fsSL "$DOWNLOAD_URL" -o st-launcher
-elif command -v wget &> /dev/null; then
-    wget -q "$DOWNLOAD_URL" -O st-launcher
-else
-    echo -e "${RED}❌ 需要 curl 或 wget${NC}"
+# 检查 Node.js
+if ! command -v node &> /dev/null; then
+    echo -e "${RED}❌ 未找到 Node.js，请先安装 Node.js >= 18${NC}"
+    echo -e "${YELLOW}   Termux: pkg install nodejs${NC}"
+    echo -e "${YELLOW}   Linux:  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash - && sudo apt install -y nodejs${NC}"
     exit 1
 fi
 
-chmod +x st-launcher
+NODE_VER=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
+if [ "$NODE_VER" -lt 18 ]; then
+    echo -e "${RED}❌ Node.js 版本过低 ($(node -v))，需要 >= 18${NC}"
+    exit 1
+fi
+
+INSTALL_DIR="$HOME/st-launcher"
+
+# 如果已安装（git 仓库），更新
+if [ -d "$INSTALL_DIR/.git" ]; then
+    echo -e "${YELLOW}📦 检测到已安装，正在更新...${NC}"
+    cd "$INSTALL_DIR"
+    git pull --ff-only 2>/dev/null || true
+else
+    # 清理旧的非 git 安装（如旧版二进制文件）
+    if [ -d "$INSTALL_DIR" ]; then
+        echo -e "${YELLOW}📦 清理旧版安装...${NC}"
+        rm -rf "$INSTALL_DIR"
+    fi
+    echo -e "${YELLOW}📥 正在下载...${NC}"
+    git clone https://github.com/2830897438/st-launcher.git "$INSTALL_DIR"
+    cd "$INSTALL_DIR"
+fi
 
 echo -e "${GREEN}✅ 安装完成！${NC}"
-echo -e "${GREEN}📍 安装位置: $INSTALL_DIR/st-launcher${NC}"
+echo -e "${GREEN}📍 安装位置: $INSTALL_DIR${NC}"
 echo ""
 echo -e "${YELLOW}🚀 正在启动...${NC}"
 echo ""
 
-./st-launcher
+node launcher.js
